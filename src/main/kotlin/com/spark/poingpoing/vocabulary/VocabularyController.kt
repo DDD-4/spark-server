@@ -34,13 +34,13 @@ class VocabularyController {
         return listOf()
     }
 
-    @ApiOperation("모두의 단어장 가져오기")
+    @ApiOperation("모두의 단어장 내려받기")
     @PostMapping("v1/vocabularies/{vocabularyId}")
     fun copyVocabulary(@PathVariable vocabularyId: Long) {
 
     }
 
-    @ApiOperation("모두의 단어장 폴더별 가져오기")
+    @ApiOperation("모두의 단어장 폴더 별 내려받기")
     @PostMapping("v1/folders/{folderId}")
     fun copyVocabularies(@PathVariable folderId: Long) {
 
