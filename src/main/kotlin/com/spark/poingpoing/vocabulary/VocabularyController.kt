@@ -10,7 +10,7 @@ class VocabularyController {
 
     @ApiOperation("나의 단어 등록")
     @PostMapping("v1/vocabularies")
-    fun createVocabulary(@RequestBody vocabularyRequest: VocabularyRequest) {
+    fun createVocabulary(vocabularyRequest: VocabularyRequest) {
 
     }
 

@@ -12,6 +12,6 @@ data class VocabularyResponse(
         @ApiModelProperty(value = "한글명", example = "사과")
         val korean: String,
 
-        @ApiModelProperty(value = "이미지", example = "")
-        val photo: String
+        @ApiModelProperty(value = "이미지 Url", example = "")
+        val photoUrl: String
 )
