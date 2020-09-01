@@ -32,7 +32,7 @@ class VocabularyController {
     @ApiOperation("모두의 단어장 조회")
     @GetMapping("v1/vocabularies/all")
     fun getAllVocabularies(): List<VocabularyResponse> {
-        val ip = InetAddress.getLocalHost().hostAddress
+        val ip = "http://15.165.176.148"
 
         val dummyVocabulary1 = VocabularyResponse(
                 id = 1,
