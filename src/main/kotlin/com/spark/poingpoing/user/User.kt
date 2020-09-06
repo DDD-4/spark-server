@@ -14,4 +14,16 @@ data class User(
 
         @OneToMany
         val folders: List<Folder> = listOf()
-): BaseEntity()
+) : BaseEntity() {
+    fun addFolder(folder: Folder) {
+        if (folders.contains(folder)) {
+            throw IllegalArgumentException("이미 존재하는 폴더입니다.")
+        }
+
+        folders.plus(folder)
+    }
+
+    fun removeFolder(folder: Folder) {
+        folders.minus(folder)
+    }
+}

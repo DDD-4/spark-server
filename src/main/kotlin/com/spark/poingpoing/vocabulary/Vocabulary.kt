@@ -9,22 +9,35 @@ import javax.persistence.*
 
 @Entity
 data class Vocabulary(
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long,
+        var english: String,
 
-        val english: String,
-
-        val korean: String,
+        var korean: String,
 
         @OneToOne
-        val photo: Photo,
+        var photo: Photo,
 
         @ManyToOne(fetch = FetchType.LAZY)
         val user: User,
 
         @ManyToOne(fetch = FetchType.LAZY)
-        val folder: Folder,
+        var folder: Folder? = null
+) : BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L
 
-        val active: Boolean
-) : BaseEntity()
+    var active: Boolean = true
+
+    fun delete() {
+        if (active) {
+            active = false
+        }
+    }
+
+    fun modifyFolder(folder: Folder) {
+        this.folder?.let { it.removeVocabulary(this) }
+
+        this.folder = folder
+        folder.addVocabulary(this)
+    }
+}

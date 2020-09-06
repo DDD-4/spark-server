@@ -7,21 +7,45 @@ import javax.persistence.*
 
 @Entity
 data class Folder(
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long,
-
         @ManyToOne(fetch = FetchType.LAZY)
         val user: User,
 
-        val name: String,
+        var name: String,
 
         val priority: Int,
 
-        val sharable: Boolean,
+        var sharable: Boolean,
 
-        val active: Boolean,
+        val default: Boolean = false,
 
         @OneToMany
         val vocabularies: List<Vocabulary> = listOf()
-) : BaseEntity()
+) : BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L
+
+    var active: Boolean = true
+
+    fun addVocabulary(vocabulary: Vocabulary) {
+        if (vocabularies.contains(vocabulary)) {
+            throw IllegalArgumentException("이미 존재하는 단어입니다.")
+        }
+
+        vocabularies.plus(vocabulary)
+    }
+
+    fun removeVocabulary(vocabulary: Vocabulary) {
+        vocabularies.minus(vocabulary)
+    }
+
+    fun removeFolder() {
+        if(default) {
+            throw IllegalArgumentException("기본 폴더느 삭제할 수 없습니다.")
+        }
+
+        if(active) {
+            active = false
+        }
+    }
+}
