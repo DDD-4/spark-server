@@ -1,5 +1,6 @@
 package com.spark.poingpoing.photo
 
+import io.swagger.annotations.Api
 import org.springframework.core.io.InputStreamResource
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
@@ -10,13 +11,15 @@ import org.springframework.web.bind.annotation.RestController
 import java.nio.file.Files
 import java.nio.file.Paths
 
+@Api(tags = ["Photo"])
 @RestController
 class PhotoController {
 
     @GetMapping("v1/photos/{photoKey}")
     fun getPhoto(@PathVariable photoKey: String): ResponseEntity<Resource> {
-
-        val path = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/$photoKey")
+        //todo
+        //val path = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/$photoKey")
+        val path = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/apple.jpeg")
 
         val photo = try {
             InputStreamResource(Files.newInputStream(path))
