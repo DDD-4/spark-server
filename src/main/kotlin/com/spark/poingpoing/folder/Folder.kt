@@ -19,7 +19,7 @@ data class Folder(
         val default: Boolean = false,
 
         @OneToMany
-        val vocabularies: List<Vocabulary> = listOf()
+        val vocabularies: MutableList<Vocabulary> = mutableListOf()
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ data class Folder(
             throw IllegalArgumentException("이미 존재하는 단어입니다.")
         }
 
-        vocabularies.plus(vocabulary)
+        vocabularies.add(vocabulary)
     }
 
     fun removeVocabulary(vocabulary: Vocabulary) {
@@ -41,7 +41,7 @@ data class Folder(
 
     fun removeFolder() {
         if(default) {
-            throw IllegalArgumentException("기본 폴더느 삭제할 수 없습니다.")
+            throw IllegalArgumentException("기본 폴더는 삭제할 수 없습니다.")
         }
 
         if(active) {
