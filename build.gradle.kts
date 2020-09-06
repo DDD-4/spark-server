@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
+    kotlin("plugin.allopen") version "1.3.72"
 }
 
 group = "com.spark"
@@ -14,6 +15,15 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
+}
+/**
+ * 지정한 annotation 들이 정의된 클래스들은
+ * open 클래스로 만들어줌
+ */
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.Embeddable")
+    annotation("javax.persistence.MappedSuperclass")
 }
 
 dependencies {
