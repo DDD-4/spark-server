@@ -1,0 +1,1 @@
+insert into user(name, created_at, updated_at) values ('TEST', now(), now());
