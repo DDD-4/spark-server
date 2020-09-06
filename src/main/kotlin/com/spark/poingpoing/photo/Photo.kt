@@ -14,5 +14,5 @@ data class Photo(
 
         val photoName: String,
 
-        val photoOriginalName: Photo
+        val photoOriginalName: String
 ) : BaseEntity()

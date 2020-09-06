@@ -1,10 +1,8 @@
 package com.spark.poingpoing.user
 
 import com.spark.poingpoing.config.BaseEntity
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import com.spark.poingpoing.folder.Folder
+import javax.persistence.*
 
 @Entity
 data class User(
@@ -12,5 +10,8 @@ data class User(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long,
 
-        val name: String
+        val name: String,
+
+        @OneToMany
+        val folders: List<Folder> = listOf()
 ): BaseEntity()
