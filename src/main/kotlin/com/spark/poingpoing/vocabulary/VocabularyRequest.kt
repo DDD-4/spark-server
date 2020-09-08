@@ -11,7 +11,7 @@ data class VocabularyRequest(
         val english: String?,
 
         @ApiModelProperty(value = "한글", example = "토마토")
-        val korea: String?,
+        val korean: String?,
 
         @ApiModelProperty(value = "폴더 Id", example = "3")
         val folderId: Long?,
