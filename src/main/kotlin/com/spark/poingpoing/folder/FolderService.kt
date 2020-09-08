@@ -36,8 +36,15 @@ class FolderService(private val folderRepository: FolderRepository) {
     }
 
     @Transactional
-    fun modifyFoldersOrder(user: User, orders: List<Long>) {
-        TODO("Not yet implemented")
+    fun modifyFoldersOrder(user: User, forderIds: List<Long>) {
+        if(user.getActiveFolders().size != forderIds.size) {
+            throw IllegalArgumentException("변경할 폴더의 갯수가 맞지 않습니다.")
+        }
+
+        forderIds.forEachIndexed { index, folderId ->
+            val folder = getFolder(folderId)
+            folder.priority = index
+        }
     }
 
     @Transactional

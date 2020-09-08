@@ -29,7 +29,7 @@ class FolderController(private val loginUserGetter: LoginUserGetter,
     @PutMapping("v1/folders")
     fun modifyOrders(@RequestBody orders: List<Long>) {
         val user = loginUserGetter.getLoginUser()
-        // todo
+
         folderService.modifyFoldersOrder(user, orders)
     }
 
@@ -37,6 +37,7 @@ class FolderController(private val loginUserGetter: LoginUserGetter,
     @DeleteMapping("v1/folders")
     fun deleteFolder(@RequestParam folderIds: List<Long>) {
         val user = loginUserGetter.getLoginUser()
+
         folderService.deleteFolders(user, folderIds)
     }
 

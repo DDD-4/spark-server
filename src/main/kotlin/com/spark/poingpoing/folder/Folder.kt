@@ -12,7 +12,7 @@ data class Folder(
 
         var name: String,
 
-        val priority: Int,
+        var priority: Int,
 
         var sharable: Boolean,
 
