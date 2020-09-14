@@ -4,9 +4,12 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
 @Service
-class PhotoService {
-    fun uploadPhoto(photo: MultipartFile): Photo {
-        TODO("Not yet implemented")
+class PhotoService(private val photoRepository: PhotoRepository) {
+    fun uploadPhoto(photo: MultipartFile): String {
+        return "1"
     }
 
+    fun downloadPhoto() {
+        TODO()
+    }
 }

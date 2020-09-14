@@ -6,18 +6,16 @@ import com.spark.poingpoing.photo.Photo
 import com.spark.poingpoing.user.User
 import javax.persistence.*
 
-
 @Entity
 data class Vocabulary(
         var english: String,
 
         var korean: String,
 
-        @OneToOne
-        var photo: Photo,
+        var photoPath: String,
 
         @ManyToOne(fetch = FetchType.LAZY)
-        val user: User,
+        var user: User,
 
         @ManyToOne(fetch = FetchType.LAZY)
         var folder: Folder? = null
@@ -35,7 +33,7 @@ data class Vocabulary(
     }
 
     fun modifyFolder(folder: Folder) {
-        this.folder?.let { it.removeVocabulary(this) }
+        this.folder?.removeVocabulary(this)
 
         this.folder = folder
         folder.addVocabulary(this)

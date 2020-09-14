@@ -45,16 +45,9 @@ class FolderController(private val loginUserGetter: LoginUserGetter,
     @ApiOperation("나의 폴더 조회")
     @GetMapping("v1/folders")
     fun getAllMyFolders(): List<FolderResponse> {
-        return loginUserGetter.getLoginUser().getActiveFolders()
-                .sortedBy { it.priority }
-                .map {
-                    FolderResponse(
-                            id = it.id,
-                            name = it.name,
-                            shareable = it.sharable,
-                            default = it.default
-                    )
-                }
-                .toList()
+        val user = loginUserGetter.getLoginUser()
+
+        return folderService.getFolders(user)
+
     }
 }

@@ -4,6 +4,7 @@ import com.spark.poingpoing.user.LoginUserGetter
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.data.domain.PageRequest
+import org.springframework.lang.Nullable
 import org.springframework.web.bind.annotation.*
 
 @Api(tags = ["Voca"])
@@ -16,31 +17,25 @@ class VocabularyController(
     @PostMapping("v1/vocabularies")
     fun createVocabulary(vocabularyRequest: VocabularyRequest) {
         val user = loginUserGetter.getLoginUser()
-        //todo photo insert
+
         vocabularyService.addVocabulary(user, vocabularyRequest)
     }
 
-    @ApiOperation("나의 단어 조회")
+    @ApiOperation("나의 단어 목록 조회")
     @GetMapping("v1/vocabularies")
-    fun getMyFolderVocabularies(
-            @RequestParam folderId: Long?,
-            @RequestParam page: Int,
-            @RequestParam size: Int
-    ): List<VocabularyResponse> {
+    fun getMyFolderVocabularies(@RequestParam(required = true) folderId: Long,
+                                @RequestParam(defaultValue = "0", required = false) page: Int,
+                                @RequestParam(defaultValue = "10", required = false) size: Int): List<VocabularyResponse> {
         val user = loginUserGetter.getLoginUser()
-        //todo
+
         return vocabularyService.getMyFolderVocabularies(user, folderId, PageRequest.of(page, size))
     }
 
     @ApiOperation("나의 단어 수정")
     @PatchMapping("v1/vocabularies/{vocabularyId}")
     fun modifyVocabulary(@PathVariable vocabularyId: Long,
-                         @RequestBody vocabularyRequest: VocabularyRequest) {
-        // todo photo update
-        val user = loginUserGetter.getLoginUser()
-        vocabularyService.modifyVocabulary(vocabularyId, vocabularyRequest)
-    }
-
+                         @RequestBody vocabularyRequest: VocabularyRequest) =
+            vocabularyService.modifyVocabulary(vocabularyId, vocabularyRequest)
 
     @ApiOperation("나의 단어 삭제")
     @DeleteMapping("v1/vocabularies/{vocabularyId}")
