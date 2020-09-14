@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
+import springfox.documentation.annotations.ApiIgnore
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -15,6 +16,7 @@ import java.nio.file.Paths
 @RestController
 class PhotoController {
 
+    @ApiIgnore
     @GetMapping("v1/photos/{photoKey}")
     fun getPhoto(@PathVariable photoKey: String): ResponseEntity<Resource> {
         //todo
