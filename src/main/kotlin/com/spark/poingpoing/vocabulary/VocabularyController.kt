@@ -3,6 +3,7 @@ package com.spark.poingpoing.vocabulary
 import com.spark.poingpoing.user.LoginUserGetter
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.lang.Nullable
 import org.springframework.web.bind.annotation.*
@@ -25,7 +26,7 @@ class VocabularyController(
     @GetMapping("v1/vocabularies")
     fun getMyFolderVocabularies(@RequestParam(required = true) folderId: Long,
                                 @RequestParam(defaultValue = "0", required = false) page: Int,
-                                @RequestParam(defaultValue = "10", required = false) size: Int): List<VocabularyResponse> {
+                                @RequestParam(defaultValue = "10", required = false) size: Int): Page<VocabularyResponse> {
         val user = loginUserGetter.getLoginUser()
 
         return vocabularyService.getMyFolderVocabularies(user, folderId, PageRequest.of(page, size))

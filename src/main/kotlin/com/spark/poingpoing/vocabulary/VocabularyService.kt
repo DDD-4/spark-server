@@ -4,6 +4,8 @@ import com.spark.poingpoing.folder.FolderService
 import com.spark.poingpoing.photo.PhotoService
 import com.spark.poingpoing.user.User
 import com.spark.poingpoing.util.convertToPhotoUrl
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -31,13 +33,14 @@ class VocabularyService(
     }
 
     @Transactional
-    fun getMyFolderVocabularies(user: User, folderId: Long, pageRequest: PageRequest): List<VocabularyResponse> {
+    fun getMyFolderVocabularies(user: User, folderId: Long, pageRequest: PageRequest): Page<VocabularyResponse> {
         val vocabularies = vocabularyRepository.findByUserIdAndFolderIdOrderByUpdatedAtDesc(user.id , folderId, pageRequest)
 
-        return vocabularies.map {
+        val responses = vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
         }
                 .toList()
+        return PageImpl<VocabularyResponse>(responses, pageRequest, vocabularies.totalElements)
     }
 
     @Transactional
