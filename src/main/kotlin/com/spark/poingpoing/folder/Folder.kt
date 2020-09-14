@@ -18,7 +18,7 @@ data class Folder(
 
         val default: Boolean = false,
 
-        @OneToMany
+        @OneToMany(mappedBy = "folder")
         val vocabularies: MutableList<Vocabulary> = mutableListOf()
 ) : BaseEntity() {
     @Id

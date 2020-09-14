@@ -6,6 +6,7 @@ import com.spark.poingpoing.util.convertToPhotoUrl
 import com.spark.poingpoing.vocabulary.Vocabulary
 import com.spark.poingpoing.vocabulary.VocabularyRepository
 import com.spark.poingpoing.vocabulary.VocabularyResponse
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -13,12 +14,13 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class EveryVocabularyService(
         private val folderService: FolderService,
-        private val vocabularyRepository: VocabularyRepository) {
+        private val vocabularyRepository: VocabularyRepository,
+        private val everyVocabularyDao: EveryVocabularyDao) {
 
     @Transactional
-    fun getEveryVocabularyFolders(user: User, pageRequest: PageRequest): List<EveryVocabularyResponse> {
+    fun getEveryVocabularyFolders(user: User, pageRequest: PageRequest): Page<EveryVocabularyResponse> {
 
-        return listOf()
+        return everyVocabularyDao.findEveryVocabularies(user.id, pageRequest)
     }
 
     @Transactional

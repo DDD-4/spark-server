@@ -15,9 +15,11 @@ data class Vocabulary(
         var photoPath: String,
 
         @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "user_id")
         var user: User,
 
         @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "folder_id")
         var folder: Folder? = null
 ) : BaseEntity() {
     @Id

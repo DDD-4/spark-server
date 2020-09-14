@@ -7,13 +7,11 @@ data class EveryVocabularyResponse(
         val folderName: String,
 
         @ApiModelProperty(value = "폴더 주인", example = "홍길동")
-        val userName: Long,
+        val userName: String,
 
         @ApiModelProperty(value = "대표 사진", example = "apple")
         val photoUrl: String,
 
         @ApiModelProperty(value = "이미지 갯수", example = "20")
-        val count: Int
+        val count: Long
 )
-
-

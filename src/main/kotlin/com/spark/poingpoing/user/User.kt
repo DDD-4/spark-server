@@ -12,18 +12,19 @@ data class User(
 
         val name: String,
 
-        @OneToMany
-        val folders: List<Folder> = listOf()
+        @OneToMany(mappedBy = "user")
+        val folders: MutableList<Folder> = mutableListOf()
+
 ) : BaseEntity() {
     fun addFolder(folder: Folder) {
         if (folders.contains(folder)) {
             throw IllegalArgumentException("이미 존재하는 폴더입니다.")
         }
 
-        folders.plus(folder)
+        this.folders.add(folder)
     }
 
     fun removeFolder(folder: Folder) {
-        folders.minus(folder)
+        folders.remove(folder)
     }
 }

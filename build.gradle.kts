@@ -3,10 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.3.3.RELEASE"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
+
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
     kotlin("plugin.allopen") version "1.3.72"
+    kotlin("kapt") version "1.3.41"
 }
 
 group = "com.spark"
@@ -35,11 +37,20 @@ dependencies {
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("commons-fileupload:commons-fileupload:1.3.1")
     implementation("commons-io:commons-io:2.6")
+    implementation("com.querydsl:querydsl-jpa")
+    implementation("com.querydsl:querydsl-apt")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("com.querydsl:querydsl-jpa:4.3.1")
+    kapt("com.querydsl:querydsl-apt:4.3.1:jpa")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+}
+
+sourceSets["main"].withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
+    kotlin.srcDir("$buildDir/generated/source/kapt/main")
 }
 
 tasks.withType<Test> {
