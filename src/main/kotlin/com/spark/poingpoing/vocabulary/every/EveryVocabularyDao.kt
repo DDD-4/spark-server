@@ -17,6 +17,7 @@ class EveryVocabularyDao(private val jpaQueryFactory: JPAQueryFactory) {
     fun findEveryVocabularies(userId: Long, pageable: Pageable): Page<EveryVocabularyResponse> {
         val vocabularies = jpaQueryFactory
                 .select(Projections.constructor(EveryVocabularyResponse::class.java,
+                        folder.id,
                         folder.name,
                         user.name,
                         vocabulary.photoPath.max(),
