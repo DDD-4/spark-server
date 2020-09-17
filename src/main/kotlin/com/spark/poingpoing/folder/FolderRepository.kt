@@ -8,5 +8,5 @@ import java.util.*
 interface FolderRepository : JpaRepository<Folder, Long> {
     fun findByIdAndActiveIsTrue(id: Long): Optional<Folder>
     fun findByUserIdAndActiveIsTrue(userId: Long): List<Folder>
-    fun countByUserIdAndActiveIsTrueAndDefaultIsFalse(userId: Long): Long
+    fun countByUserIdAndActiveIsTrue(userId: Long): Long
 }
