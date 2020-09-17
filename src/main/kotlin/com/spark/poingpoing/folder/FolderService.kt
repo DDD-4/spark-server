@@ -16,7 +16,7 @@ class FolderService(private val folderRepository: FolderRepository) {
 
     @Transactional
     fun createFolder(user: User, folderRequest: FolderRequest): FolderCreateResponse {
-        val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrue(user.id)
+        val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndDefaultIsFalse(user.id)
                 .toInt()
 
         val folder = Folder(name = folderRequest.name!!,
@@ -44,13 +44,17 @@ class FolderService(private val folderRepository: FolderRepository) {
 
     @Transactional
     fun modifyFoldersOrder(user: User, folderIds: List<Long>) {
-        val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrue(user.id)
+        val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndDefaultIsFalse(user.id)
                 .toInt()
         if (countOfActiveFolder != folderIds.size) {
             throw IllegalArgumentException("변경할 폴더의 갯수가 맞지 않습니다.")
         }
 
         val folders = folderRepository.findAllById(folderIds)
+        if (folders.any { it.default }) {
+            throw IllegalArgumentException("기본 폴더는 수정할 수 없습니다.")
+        }
+
         if (folders.any { !it.active }) {
             throw IllegalArgumentException("삭제된 폴더의 순서는 바꿀 수 없습니다.")
         }
@@ -77,13 +81,15 @@ class FolderService(private val folderRepository: FolderRepository) {
 
         return folders
                 .sortedBy {
+                    it.default
                     it.priority
                 }
                 .map {
                     FolderResponse(
                             id = it.id,
                             name = it.name,
-                            shareable = it.sharable
+                            shareable = it.sharable,
+                            default = it.default
                     )
                 }
                 .toList()

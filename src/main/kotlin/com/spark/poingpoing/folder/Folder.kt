@@ -16,6 +16,8 @@ data class Folder(
 
         var sharable: Boolean,
 
+        val default: Boolean = false,
+
         @OneToMany(mappedBy = "folder")
         val vocabularies: MutableList<Vocabulary> = mutableListOf()
 ) : BaseEntity() {
@@ -38,6 +40,10 @@ data class Folder(
     }
 
     fun removeFolder() {
+        if(default) {
+            throw IllegalArgumentException("기본 폴더는 삭제할 수 없습니다.")
+        }
+
         if(active) {
             active = false
         }
