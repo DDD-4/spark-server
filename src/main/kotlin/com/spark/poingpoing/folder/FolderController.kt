@@ -13,10 +13,10 @@ class FolderController(private val loginUserGetter: LoginUserGetter,
 
     @ApiOperation("나의 폴더 등록")
     @PostMapping("v1/folders")
-    fun createFolder(@RequestBody folderRequest: FolderRequest) {
+    fun createFolder(@RequestBody folderRequest: FolderRequest): FolderCreateResponse {
         val user = loginUserGetter.getLoginUser()
 
-        folderService.createFolder(user, folderRequest)
+        return folderService.createFolder(user, folderRequest)
     }
 
     @ApiOperation("나의 폴더 수정")
@@ -48,6 +48,5 @@ class FolderController(private val loginUserGetter: LoginUserGetter,
         val user = loginUserGetter.getLoginUser()
 
         return folderService.getFolders(user)
-
     }
 }

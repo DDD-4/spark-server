@@ -15,7 +15,7 @@ class FolderService(private val folderRepository: FolderRepository) {
     }
 
     @Transactional
-    fun createFolder(user: User, folderRequest: FolderRequest) {
+    fun createFolder(user: User, folderRequest: FolderRequest): FolderCreateResponse {
         val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndDefaultIsFalse(user.id)
                 .toInt()
 
@@ -24,15 +24,17 @@ class FolderService(private val folderRepository: FolderRepository) {
                 user = user,
                 priority = countOfActiveFolder + 1)
 
-        folderRepository.save(folder)
+        val savedFolder = folderRepository.save(folder)
 
         user.addFolder(folder)
+
+        return FolderCreateResponse(savedFolder.id)
     }
 
     @Transactional
     fun modifyFolder(folderId: Long, folderRequest: FolderRequest) {
         val folder = getFolder(folderId)
-        if(folder.active) {
+        if (folder.active) {
             throw IllegalArgumentException("기본 폴더는 수정할 수 없습니다.")
         }
 

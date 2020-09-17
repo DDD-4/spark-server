@@ -12,8 +12,6 @@ data class FolderResponse(
         @ApiModelProperty(value = "폴더 공유 여부", example = "true")
         val shareable: Boolean,
 
-
         @ApiModelProperty(value = "기본 폴더 여부", example = "false")
         val default: Boolean
-
 )
