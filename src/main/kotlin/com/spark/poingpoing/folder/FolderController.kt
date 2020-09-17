@@ -27,18 +27,18 @@ class FolderController(private val loginUserGetter: LoginUserGetter,
 
     @ApiOperation("나의 폴더 순서 변경")
     @PutMapping("v1/folders")
-    fun modifyOrders(@RequestBody orders: List<Long>) {
+    fun modifyOrders(@RequestBody updateDeleteFolderRequest: UpdateDeleteFolderRequest) {
         val user = loginUserGetter.getLoginUser()
 
-        folderService.modifyFoldersOrder(user, orders)
+        folderService.modifyFoldersOrder(user, updateDeleteFolderRequest.folderIds)
     }
 
     @ApiOperation("나의 폴더 삭제")
     @DeleteMapping("v1/folders")
-    fun deleteFolder(@RequestParam folderIds: List<Long>) {
+    fun deleteFolder(@RequestBody updateDeleteFolderRequest: UpdateDeleteFolderRequest) {
         val user = loginUserGetter.getLoginUser()
 
-        folderService.deleteFolders(user, folderIds)
+        folderService.deleteFolders(user, updateDeleteFolderRequest.folderIds)
     }
 
 
