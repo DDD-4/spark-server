@@ -5,7 +5,6 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.lang.Nullable
 import org.springframework.web.bind.annotation.*
 
 @Api(tags = ["Voca"])
@@ -16,10 +15,10 @@ class VocabularyController(
 
     @ApiOperation("나의 단어 등록")
     @PostMapping("v1/vocabularies")
-    fun createVocabulary(vocabularyRequest: VocabularyRequest) {
+    fun createVocabulary(vocabularyRequest: VocabularyRequest): VocabularyCreateResponse {
         val user = loginUserGetter.getLoginUser()
 
-        vocabularyService.addVocabulary(user, vocabularyRequest)
+        return vocabularyService.addVocabulary(user, vocabularyRequest)
     }
 
     @ApiOperation("나의 단어 목록 조회")

@@ -17,10 +17,10 @@ class VocabularyService(
         private val vocabularyRepository: VocabularyRepository) {
 
     @Transactional
-    fun addVocabulary(user: User, vocabularyRequest: VocabularyRequest) {
+    fun addVocabulary(user: User, vocabularyRequest: VocabularyRequest) : VocabularyCreateResponse {
         val photoPath = photoService.uploadPhoto(vocabularyRequest.photo!!)
 
-        val folder = vocabularyRequest.folderId?.let { folderService.getFolder(it) }
+        val folder = vocabularyRequest.folderId!!.let { folderService.getFolder(it) }
 
         val vocabulary = Vocabulary(
                 english = vocabularyRequest.english!!,
@@ -29,7 +29,10 @@ class VocabularyService(
                 folder = folder,
                 user = user
         )
-        folder?.addVocabulary(vocabulary)
+
+        val savedVocabulary = vocabularyRepository.save(vocabulary)
+
+        return VocabularyCreateResponse(savedVocabulary.id)
     }
 
     @Transactional
