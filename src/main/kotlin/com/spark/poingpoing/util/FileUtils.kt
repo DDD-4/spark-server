@@ -16,7 +16,7 @@ fun findFile(fileName: String): InputStreamResource {
     return try {
         InputStreamResource(Files.newInputStream(path))
     } catch (e: Exception) {
-        throw NotFoundException("존재하지 않는 사진 입니다.")
+        throw NotFoundException("$path:: 존재하지 않는 사진 입니다.")
     }
 }
 
