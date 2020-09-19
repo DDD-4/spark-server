@@ -34,7 +34,7 @@ class FolderService(private val folderRepository: FolderRepository) {
     @Transactional
     fun modifyFolder(folderId: Long, folderRequest: FolderRequest) {
         val folder = getFolder(folderId)
-        if (folder.active) {
+        if (folder.default) {
             throw IllegalArgumentException("기본 폴더는 수정할 수 없습니다.")
         }
 
