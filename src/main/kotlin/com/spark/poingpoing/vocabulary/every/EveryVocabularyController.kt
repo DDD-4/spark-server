@@ -16,11 +16,16 @@ class EveryVocabularyController(
 
     @ApiOperation("모두의 단어장 리스트 조회")
     @GetMapping("v1/every-vocabularies")
-    fun getEveryVocabularyFolders(@RequestParam(defaultValue = "0") page: Int,
+    fun getEveryVocabularyFolders(@RequestParam(defaultValue = "LATEST") sortType: SortType,
+                                  @RequestParam(defaultValue = "0") page: Int,
                                   @RequestParam(defaultValue = "10") size: Int): Page<EveryVocabularyResponse> {
         val user = loginUserGetter.getLoginUser()
 
-        return everyVocabularyService.getEveryVocabularyFolders(user, PageRequest.of(page, size))
+        if(SortType.LATEST == sortType) {
+            return everyVocabularyService.getEveryVocabularyFoldersOrderByLatest(user, PageRequest.of(page, size))
+        }
+
+        return everyVocabularyService.getEveryVocabularyFoldersOrderByPopular(user, PageRequest.of(page, size))
     }
 
     @ApiOperation("모두의 단어장 폴더 별 조회")

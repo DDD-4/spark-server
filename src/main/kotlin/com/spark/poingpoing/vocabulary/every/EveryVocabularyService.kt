@@ -17,13 +17,19 @@ class EveryVocabularyService(
         private val vocabularyRepository: VocabularyRepository,
         private val everyVocabularyDao: EveryVocabularyDao) {
 
-    @Transactional
-    fun getEveryVocabularyFolders(user: User, pageRequest: PageRequest): Page<EveryVocabularyResponse> {
+    @Transactional(readOnly = true)
+    fun getEveryVocabularyFoldersOrderByLatest(user: User, pageRequest: PageRequest): Page<EveryVocabularyResponse> {
 
         return everyVocabularyDao.findEveryVocabularies(user.id, pageRequest)
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
+    fun getEveryVocabularyFoldersOrderByPopular(user: User, of: PageRequest): Page<EveryVocabularyResponse> {
+
+        return Page.empty()
+    }
+
+    @Transactional(readOnly = true)
     fun getEveryVocabularies(user: User, folderId: Long, pageRequest: PageRequest): List<VocabularyResponse> {
         val vocabularies = vocabularyRepository.findByUserIdNotAndFolderIdOrderByUpdatedAtDesc(user.id, folderId, pageRequest)
 
