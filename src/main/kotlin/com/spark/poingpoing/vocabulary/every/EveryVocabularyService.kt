@@ -27,9 +27,11 @@ class EveryVocabularyService(
     }
 
     @Transactional(readOnly = true)
-    fun getEveryVocabularyFoldersOrderByPopular(user: User, of: PageRequest): EveryVocabularyPageResponse {
+    fun getEveryVocabularyFoldersOrderByPopular(user: User, pageRequest: PageRequest): EveryVocabularyPageResponse {
+        //todo 인기순 구현
+        val everyVocabularies = everyVocabularyDao.findEveryVocabularies(user.id, pageRequest)
 
-        return EveryVocabularyPageResponse(Lists.newArrayList(), false, 0)
+        return EveryVocabularyPageResponse(everyVocabularies.content.shuffled(), everyVocabularies.hasNext(), everyVocabularies.totalElements)
     }
 
     @Transactional(readOnly = true)
