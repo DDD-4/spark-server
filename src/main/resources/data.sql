@@ -47,6 +47,28 @@ values(now(), now(), true, false, '동물 바구니', 0, true, 2);
 
 insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
 values (now(), now(), true, 'tomato', '토마토', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+values (now(), now(), true, 'banana', '바나나', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'pineapple', '파인애플', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'peach', '복숭아', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'melon', '멜론', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'grape', '포도', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'kiwi', '키위', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'lemon', '레몬', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'mango', '망고', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'lime', '라임', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'pear', '배', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
+values (now(), now(), true, 'cherry', '체리', 1, 'b2f6e721aeef478fb81e942c705071bc', 1);
+
 
 insert into vocabulary(created_at, updated_at, active, english, korean, folder_id , photo_path , user_id)
 values (now(), now(), true, 'apple', '사과', 3, 'b2f6e721aeef478fb81e942c705071bc', 2);
