@@ -1,0 +1,2 @@
+# aws profile yaml
+src/main/resources/application-aws.yaml filter=git-crypt diff=git-crypt
