@@ -1,12 +1,13 @@
 package com.spark.poingpoing.vocabulary.every
 
+import com.google.common.collect.Lists
 import com.spark.poingpoing.folder.FolderService
 import com.spark.poingpoing.user.User
 import com.spark.poingpoing.util.convertToPhotoUrl
 import com.spark.poingpoing.vocabulary.Vocabulary
+import com.spark.poingpoing.vocabulary.VocabularyPageResponse
 import com.spark.poingpoing.vocabulary.VocabularyRepository
 import com.spark.poingpoing.vocabulary.VocabularyResponse
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,25 +19,29 @@ class EveryVocabularyService(
         private val everyVocabularyDao: EveryVocabularyDao) {
 
     @Transactional(readOnly = true)
-    fun getEveryVocabularyFoldersOrderByLatest(user: User, pageRequest: PageRequest): Page<EveryVocabularyResponse> {
+    fun getEveryVocabularyFoldersOrderByLatest(user: User, pageRequest: PageRequest): EveryVocabularyPageResponse {
 
-        return everyVocabularyDao.findEveryVocabularies(user.id, pageRequest)
+        val everyVocabularies = everyVocabularyDao.findEveryVocabularies(user.id, pageRequest)
+
+        return EveryVocabularyPageResponse(everyVocabularies.content, everyVocabularies.hasNext(), everyVocabularies.totalElements)
     }
 
     @Transactional(readOnly = true)
-    fun getEveryVocabularyFoldersOrderByPopular(user: User, of: PageRequest): Page<EveryVocabularyResponse> {
+    fun getEveryVocabularyFoldersOrderByPopular(user: User, of: PageRequest): EveryVocabularyPageResponse {
 
-        return Page.empty()
+        return EveryVocabularyPageResponse(Lists.newArrayList(), false, 0)
     }
 
     @Transactional(readOnly = true)
-    fun getEveryVocabularies(user: User, folderId: Long, pageRequest: PageRequest): List<VocabularyResponse> {
+    fun getEveryVocabularies(user: User, folderId: Long, pageRequest: PageRequest): VocabularyPageResponse {
         val vocabularies = vocabularyRepository.findByUserIdNotAndFolderIdOrderByUpdatedAtDesc(user.id, folderId, pageRequest)
 
-        return vocabularies.map {
+        val vocabulariesResponse = vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
         }
                 .toList()
+
+        return VocabularyPageResponse(vocabulariesResponse, vocabularies.hasNext(), vocabularies.totalElements)
     }
 
     @Transactional

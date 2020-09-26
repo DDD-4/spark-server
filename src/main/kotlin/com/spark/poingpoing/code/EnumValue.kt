@@ -1,7 +1,9 @@
 package com.spark.poingpoing.code
 
+import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 
+@ApiModel
 data class EnumValue(
         @ApiModelProperty(value = "enum Key", example = "LATEST")
         val key: String,

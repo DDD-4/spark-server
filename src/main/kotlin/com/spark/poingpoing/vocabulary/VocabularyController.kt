@@ -25,7 +25,7 @@ class VocabularyController(
     @GetMapping("v1/vocabularies")
     fun getMyFolderVocabularies(@RequestParam(required = true) folderId: Long,
                                 @RequestParam(defaultValue = "0", required = false) page: Int,
-                                @RequestParam(defaultValue = "10", required = false) size: Int): Page<VocabularyResponse> {
+                                @RequestParam(defaultValue = "10", required = false) size: Int): VocabularyPageResponse {
         val user = loginUserGetter.getLoginUser()
 
         return vocabularyService.getMyFolderVocabularies(user, folderId, PageRequest.of(page, size))

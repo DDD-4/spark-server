@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.web.multipart.MultipartFile
 
-
 @ApiModel
 data class VocabularyRequest(
         @ApiModelProperty(value = "영어", example = "tomato")

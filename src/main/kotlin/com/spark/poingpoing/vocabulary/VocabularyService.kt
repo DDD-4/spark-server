@@ -36,14 +36,15 @@ class VocabularyService(
     }
 
     @Transactional
-    fun getMyFolderVocabularies(user: User, folderId: Long, pageRequest: PageRequest): Page<VocabularyResponse> {
+    fun getMyFolderVocabularies(user: User, folderId: Long, pageRequest: PageRequest): VocabularyPageResponse {
         val vocabularies = vocabularyRepository.findByUserIdAndFolderIdOrderByUpdatedAtDesc(user.id , folderId, pageRequest)
 
         val responses = vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
         }
                 .toList()
-        return PageImpl<VocabularyResponse>(responses, pageRequest, vocabularies.totalElements)
+
+        return VocabularyPageResponse(responses, vocabularies.hasNext(), vocabularies.totalElements)
     }
 
     @Transactional
