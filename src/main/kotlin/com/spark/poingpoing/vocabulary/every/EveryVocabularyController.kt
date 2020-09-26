@@ -38,9 +38,9 @@ class EveryVocabularyController(
         return everyVocabularyService.getEveryVocabularies(user, folderId, PageRequest.of(page, size))
     }
 
-    @ApiOperation("모두의 단어장 내려받기")
+    @ApiOperation("모두의 단어장 Id 별 내려받기")
     @PostMapping("v1/every-vocabularies")
-    fun copyEveryVocabularies(@RequestBody everyVocabularyRequest: EveryVocabularyRequest) {
+    fun copyEveryVocabularies(@RequestBody everyVocabularyRequest: EveryVocabularyIdsRequest) {
         val user = loginUserGetter.getLoginUser()
 
         everyVocabularyService.copyEveryVocabularies(user, everyVocabularyRequest)

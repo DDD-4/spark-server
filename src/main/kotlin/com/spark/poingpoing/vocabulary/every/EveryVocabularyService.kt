@@ -40,9 +40,9 @@ class EveryVocabularyService(
     }
 
     @Transactional
-    fun copyEveryVocabularies(user: User, everyVocabularyRequest: EveryVocabularyRequest) {
-        val targetFolder = folderService.getFolder(everyVocabularyRequest.myFolderId)
-        val vocabularies = vocabularyRepository.findAllById(everyVocabularyRequest.vocabularyIds!!)
+    fun copyEveryVocabularies(user: User, everyVocabularyIdsRequest: EveryVocabularyIdsRequest) {
+        val targetFolder = folderService.getFolder(everyVocabularyIdsRequest.myFolderId)
+        val vocabularies = vocabularyRepository.findAllById(everyVocabularyIdsRequest.vocabularyIds)
 
         val copyVocabularies = vocabularies
                 .map {
