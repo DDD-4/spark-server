@@ -3,6 +3,7 @@ package com.spark.poingpoing.folder
 import com.spark.poingpoing.config.BaseEntity
 import com.spark.poingpoing.user.User
 import com.spark.poingpoing.vocabulary.Vocabulary
+import org.hibernate.annotations.ColumnDefault
 import javax.persistence.*
 
 @Entity
@@ -15,6 +16,9 @@ data class Folder(
         var priority: Int,
 
         var sharable: Boolean,
+
+        @ColumnDefault("0.0")
+        var point: Double = 0.0,
 
         val default: Boolean = false,
 
@@ -40,12 +44,16 @@ data class Folder(
     }
 
     fun removeFolder() {
-        if(default) {
+        if (default) {
             throw IllegalArgumentException("기본 폴더는 삭제할 수 없습니다.")
         }
 
-        if(active) {
+        if (active) {
             active = false
         }
+    }
+
+    fun plusSharePoint() {
+        point += 1
     }
 }

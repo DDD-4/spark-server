@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class EveryVocabularyDao(private val jpaQueryFactory: JPAQueryFactory) {
 
-    fun findEveryVocabularies(userId: Long, pageable: Pageable): Page<EveryVocabularyResponse> {
+    fun findEveryVocabulariesOrderByLatest(userId: Long, pageable: Pageable): Page<EveryVocabularyResponse> {
         val query = jpaQueryFactory
                 .select(Projections.constructor(EveryVocabularyResponse::class.java,
                         folder.id,
@@ -35,6 +35,34 @@ class EveryVocabularyDao(private val jpaQueryFactory: JPAQueryFactory) {
         val totalCount = query.fetch().size.toLong()
         val content = query
                 .orderBy(folder.updatedAt.desc())
+                .offset(pageable.offset)
+                .limit(pageable.pageSize.toLong())
+                .fetch()
+
+        return PageImpl<EveryVocabularyResponse>(content, pageable, totalCount)
+    }
+
+    fun findEveryVocabulariesOrderByPopular(userId: Long, pageable: Pageable): Page<EveryVocabularyResponse> {
+        val query = jpaQueryFactory
+                .select(Projections.constructor(EveryVocabularyResponse::class.java,
+                        folder.id,
+                        folder.name,
+                        user.name,
+                        vocabulary.photoPath.max(),
+                        vocabulary.id.count())
+                )
+                .from(folder)
+                .innerJoin(folder.user, user)
+                .on(folder.active.eq(true)
+                        .and(folder.sharable.eq(true))
+                        .and(folder.user.id.ne(userId)))
+                .innerJoin(folder.vocabularies, vocabulary)
+                .on(vocabulary.active.eq(true))
+                .groupBy(folder.id, folder.name, user.name)
+
+        val totalCount = query.fetch().size.toLong()
+        val content = query
+                .orderBy(folder.point.desc(), folder.updatedAt.desc())
                 .offset(pageable.offset)
                 .limit(pageable.pageSize.toLong())
                 .fetch()

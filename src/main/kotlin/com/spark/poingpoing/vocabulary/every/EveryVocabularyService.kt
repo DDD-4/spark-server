@@ -1,6 +1,5 @@
 package com.spark.poingpoing.vocabulary.every
 
-import com.google.common.collect.Lists
 import com.spark.poingpoing.folder.FolderService
 import com.spark.poingpoing.user.User
 import com.spark.poingpoing.util.convertToPhotoUrl
@@ -21,17 +20,16 @@ class EveryVocabularyService(
     @Transactional(readOnly = true)
     fun getEveryVocabularyFoldersOrderByLatest(user: User, pageRequest: PageRequest): EveryVocabularyPageResponse {
 
-        val everyVocabularies = everyVocabularyDao.findEveryVocabularies(user.id, pageRequest)
+        val everyVocabularies = everyVocabularyDao.findEveryVocabulariesOrderByLatest(user.id, pageRequest)
 
         return EveryVocabularyPageResponse(everyVocabularies.content, everyVocabularies.hasNext(), everyVocabularies.totalElements)
     }
 
     @Transactional(readOnly = true)
     fun getEveryVocabularyFoldersOrderByPopular(user: User, pageRequest: PageRequest): EveryVocabularyPageResponse {
-        //todo 인기순 구현
-        val everyVocabularies = everyVocabularyDao.findEveryVocabularies(user.id, pageRequest)
+        val everyVocabularies = everyVocabularyDao.findEveryVocabulariesOrderByPopular(user.id, pageRequest)
 
-        return EveryVocabularyPageResponse(everyVocabularies.content.shuffled(), everyVocabularies.hasNext(), everyVocabularies.totalElements)
+        return EveryVocabularyPageResponse(everyVocabularies.content, everyVocabularies.hasNext(), everyVocabularies.totalElements)
     }
 
     @Transactional(readOnly = true)
@@ -64,6 +62,8 @@ class EveryVocabularyService(
                 .toList()
 
         vocabularyRepository.saveAll(copyVocabularies)
+
+        folderService.plusSharePoint(vocabularies[0].folder!!.id)
     }
 
     @Transactional
@@ -84,6 +84,8 @@ class EveryVocabularyService(
                 .toList()
 
         vocabularyRepository.saveAll(copyVocabularies)
+
+        folderService.plusSharePoint(folderId)
     }
 }
 

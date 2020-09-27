@@ -94,4 +94,11 @@ class FolderService(private val folderRepository: FolderRepository) {
                 }
                 .toList()
     }
+
+    @Transactional
+    fun plusSharePoint(folderId: Long) {
+        val folder = getFolder(folderId)
+
+        folder.plusSharePoint()
+    }
 }
