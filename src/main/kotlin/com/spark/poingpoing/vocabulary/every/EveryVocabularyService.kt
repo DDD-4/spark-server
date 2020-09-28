@@ -34,7 +34,7 @@ class EveryVocabularyService(
 
     @Transactional(readOnly = true)
     fun getEveryVocabularies(user: User, folderId: Long, pageRequest: PageRequest): VocabularyPageResponse {
-        val vocabularies = vocabularyRepository.findByUserIdNotAndFolderIdOrderByUpdatedAtDesc(user.id, folderId, pageRequest)
+        val vocabularies = vocabularyRepository.findByUserIdNotAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(user.id, folderId, pageRequest)
 
         val vocabulariesResponse = vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
@@ -69,7 +69,7 @@ class EveryVocabularyService(
     @Transactional
     fun copyEveryVocabularyFolder(user: User, folderId: Long, myFolderId: Long) {
         val targetFolder = folderService.getFolder(myFolderId)
-        val vocabularies = vocabularyRepository.findAllByFolderIdOrderByUpdatedAtDesc(folderId)
+        val vocabularies = vocabularyRepository.findAllByFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(folderId)
 
         val copyVocabularies = vocabularies
                 .map {

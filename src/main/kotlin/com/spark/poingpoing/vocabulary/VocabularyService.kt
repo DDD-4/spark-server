@@ -4,8 +4,6 @@ import com.spark.poingpoing.folder.FolderService
 import com.spark.poingpoing.photo.PhotoService
 import com.spark.poingpoing.user.User
 import com.spark.poingpoing.util.convertToPhotoUrl
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -37,7 +35,7 @@ class VocabularyService(
 
     @Transactional
     fun getMyFolderVocabularies(user: User, folderId: Long, pageRequest: PageRequest): VocabularyPageResponse {
-        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdOrderByUpdatedAtDesc(user.id , folderId, pageRequest)
+        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(user.id , folderId, pageRequest)
 
         val responses = vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
@@ -48,9 +46,11 @@ class VocabularyService(
     }
 
     @Transactional
-    fun modifyVocabulary(vocabularyId: Long, vocabularyRequest: VocabularyRequest) {
+    fun modifyVocabulary(user: User, vocabularyId: Long, vocabularyRequest: VocabularyRequest) {
         val vocabulary = getVocabulary(vocabularyId)
-
+        if(vocabulary.user.id != user.id) {
+            throw IllegalArgumentException("나의 단어만 수정이 가능합니다.")
+        }
         vocabularyRequest.folderId?.let {
             val folder = folderService.getFolder(folderId = it)
             vocabulary.modifyFolder(folder)
@@ -64,8 +64,11 @@ class VocabularyService(
     }
 
     @Transactional
-    fun deleteVocabulary(vocabularyId: Long) {
+    fun deleteVocabulary(user: User, vocabularyId: Long) {
         val vocabulary = getVocabulary(vocabularyId)
+        if(vocabulary.user.id != user.id) {
+            throw IllegalArgumentException("나의 단어만 삭제가 가능합니다.")
+        }
 
         vocabulary.delete()
     }

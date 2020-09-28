@@ -3,7 +3,6 @@ package com.spark.poingpoing.vocabulary
 import com.spark.poingpoing.user.LoginUserGetter
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.*
 
@@ -34,11 +33,17 @@ class VocabularyController(
     @ApiOperation("나의 단어 수정")
     @PatchMapping("v1/vocabularies/{vocabularyId}")
     fun modifyVocabulary(@PathVariable vocabularyId: Long,
-                         @RequestBody vocabularyRequest: VocabularyRequest) =
-            vocabularyService.modifyVocabulary(vocabularyId, vocabularyRequest)
+                         @RequestBody vocabularyRequest: VocabularyRequest) {
+        val user = loginUserGetter.getLoginUser()
+
+        vocabularyService.modifyVocabulary(user, vocabularyId, vocabularyRequest)
+    }
 
     @ApiOperation("나의 단어 삭제")
     @DeleteMapping("v1/vocabularies/{vocabularyId}")
-    fun deleteVocabulary(@PathVariable vocabularyId: Long) =
-            vocabularyService.deleteVocabulary(vocabularyId)
+    fun deleteVocabulary(@PathVariable vocabularyId: Long) {
+        val user = loginUserGetter.getLoginUser()
+
+        vocabularyService.deleteVocabulary(user, vocabularyId)
+    }
 }

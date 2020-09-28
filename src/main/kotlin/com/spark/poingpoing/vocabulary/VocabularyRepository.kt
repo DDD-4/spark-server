@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface VocabularyRepository : JpaRepository<Vocabulary, Long> {
-    fun findByUserIdAndFolderIdOrderByUpdatedAtDesc(userId: Long, folderId: Long, pageable: Pageable): Page<Vocabulary>
-    fun findByUserIdNotAndFolderIdOrderByUpdatedAtDesc(userId: Long, folderId: Long, pageable: Pageable): Page<Vocabulary>
-    fun findAllByFolderIdOrderByUpdatedAtDesc(folderId: Long): List<Vocabulary>
+    fun findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(userId: Long, folderId: Long, pageable: Pageable): Page<Vocabulary>
+    fun findByUserIdNotAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(userId: Long, folderId: Long, pageable: Pageable): Page<Vocabulary>
+    fun findAllByFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(folderId: Long): List<Vocabulary>
 }
