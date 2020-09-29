@@ -15,5 +15,8 @@ data class FolderResponse(
         val shareable: Boolean,
 
         @ApiModelProperty(value = "기본 폴더 여부", example = "false")
-        val default: Boolean
+        val default: Boolean,
+
+        @ApiModelProperty(value = "대표 사진(없는 경우 보내지 않음)")
+        val photoUrl: String?
 )

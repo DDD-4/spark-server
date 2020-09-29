@@ -2,6 +2,7 @@ package com.spark.poingpoing.folder
 
 import com.spark.poingpoing.config.BaseEntity
 import com.spark.poingpoing.user.User
+import com.spark.poingpoing.util.convertToPhotoUrl
 import com.spark.poingpoing.vocabulary.Vocabulary
 import org.hibernate.annotations.ColumnDefault
 import javax.persistence.*
@@ -55,5 +56,19 @@ data class Folder(
 
     fun plusSharePoint() {
         point += 1
+    }
+
+    fun getRepresentativePhotoUrl(): String? {
+        if(vocabularies.isEmpty()) {
+            return ""
+        }
+
+        return vocabularies
+                .asSequence()
+                .filter { vocabulary -> vocabulary.active }
+                .sortedByDescending { it.updatedAt }
+                .first()
+                .photoPath
+                .convertToPhotoUrl()
     }
 }

@@ -89,7 +89,8 @@ class FolderService(private val folderRepository: FolderRepository) {
                             id = it.id,
                             name = it.name,
                             shareable = it.sharable,
-                            default = it.default
+                            default = it.default,
+                            photoUrl = it.getRepresentativePhotoUrl()
                     )
                 }
                 .toList()
