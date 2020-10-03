@@ -8,8 +8,8 @@ class PhotoUrlUtilsKtTest {
 
     @Test
     fun cretePath() {
-        val photoUrl = "1".convertToPhotoUrl()
+        val photoUrl = "b2f6e721aeef478fb81e942c705071bb".convertToPhotoUrl()
 
-        assertEquals("http://www.poingpoing.cf/v1/photos/1", photoUrl)
+        assertEquals("http://www.poingpoing.cf/v1/photos/b2f6e721-aeef-478f-b81e-942c705071bb", photoUrl)
     }
 }
