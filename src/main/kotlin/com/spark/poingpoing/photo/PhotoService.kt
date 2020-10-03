@@ -3,7 +3,7 @@ package com.spark.poingpoing.photo
 
 import com.spark.poingpoing.util.findFile
 import com.spark.poingpoing.util.getBaseFilePath
-import com.spark.poingpoing.util.toUUIDStringWithDash
+import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -18,6 +18,8 @@ import java.util.*
 @Service
 class PhotoService(private val photoRepository: PhotoRepository) {
 
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Transactional
     fun uploadPhoto(photo: MultipartFile): String {
         val (originalName, extension) = photo.originalFilename!!.split(".")
@@ -25,24 +27,25 @@ class PhotoService(private val photoRepository: PhotoRepository) {
 
         savePhoto(createdPhoto, photo)
 
-
-        return createdPhoto.id.toString()
+        return createdPhoto.pathKey.toString().replace("-", "")
     }
 
     private fun savePhoto(photo: Photo, photoFile: MultipartFile) {
-        val savedLocation = Paths.get(getBaseFilePath() + "/${photo.id}.${photo.extension}")
+        val savedLocation = Paths.get(getBaseFilePath() + "/${photo.pathKey}.${photo.extension}")
+
+        log.info("savedLocation : $savedLocation")
 
         Files.copy(photoFile.inputStream, savedLocation, StandardCopyOption.REPLACE_EXISTING)
     }
 
     @Transactional(readOnly = true)
     fun downloadPhoto(photoId: String): ResponseEntity<Resource> {
-        val (id, name, extension) = photoRepository.findById(UUID.fromString(photoId))
+        val photo = photoRepository.findFirstByPathKey(UUID.fromString(photoId))
                 .orElseThrow { IllegalArgumentException("잘못된 photo 식별자 입니다.") }
 
-        val photoStream = findFile("$id.$extension")
+        val photoStream = findFile("${photo.pathKey}.${photo.extension}")
 
-        val photoName = "$name.$extension"
+        val photoName = "${photo.name}.${photo.extension}"
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header("Content-Disposition", "attachment;filename=\"$photoName\";")
