@@ -1,6 +1,7 @@
 package com.spark.poingpoing.folder
 
 import com.spark.poingpoing.exception.BadRequestException
+import com.spark.poingpoing.exception.ForbiddenException
 import com.spark.poingpoing.exception.NotFoundException
 import com.spark.poingpoing.user.User
 import org.springframework.stereotype.Service
@@ -10,37 +11,45 @@ import org.springframework.transaction.annotation.Transactional
 class FolderService(private val folderRepository: FolderRepository) {
 
     @Transactional(readOnly = true)
+    fun getFolder(user: User, folderId: Long): Folder {
+        val folder = getFolder(folderId)
+        if(folder.user != user) {
+            throw ForbiddenException("폴더($folderId) 접근이 불가능합니다.")
+        }
+
+        return folder
+    }
+
+    @Transactional(readOnly = true)
     fun getFolder(folderId: Long): Folder {
         return folderRepository.findByIdAndActiveIsTrue(folderId)
                 .orElseThrow { NotFoundException("폴더($folderId)를 찾을 수 없습니다.") }
     }
 
     @Transactional
-    fun createFolder(user: User, folderRequest: FolderRequest): FolderCreateResponse {
+    fun createFolder(user: User, folderRequest: FolderCreateRequest): FolderCreateResponse {
         val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndDefaultIsFalse(user.id)
                 .toInt()
 
-        val folder = Folder(name = folderRequest.name!!,
-                sharable = folderRequest.shareable!!,
+        val folder = Folder(name = folderRequest.name,
+                sharable = folderRequest.shareable,
                 user = user,
                 priority = countOfActiveFolder + 1)
 
         val savedFolder = folderRepository.save(folder)
 
-        user.addFolder(folder)
-
         return FolderCreateResponse(savedFolder.id)
     }
 
     @Transactional
-    fun modifyFolder(folderId: Long, folderRequest: FolderRequest) {
-        val folder = getFolder(folderId)
+    fun modifyFolder(user: User, folderId: Long, folderUpdateRequest: FolderUpdateRequest) {
+        val folder = getFolder(user, folderId)
         if (folder.default) {
             throw BadRequestException("기본 폴더(${folderId})는 수정할 수 없습니다.")
         }
 
-        folderRequest.shareable?.let { folder.sharable = it }
-        folderRequest.name?.let { folder.name = it }
+        folderUpdateRequest.shareable?.let { folder.sharable = it }
+        folderUpdateRequest.name?.let { folder.name = it }
     }
 
     @Transactional
@@ -57,11 +66,11 @@ class FolderService(private val folderRepository: FolderRepository) {
         }
 
         if (folders.any { !it.active }) {
-            throw BadRequestException("삭제된 폴더의 순서는 바꿀 수 없습니다.")
+            throw NotFoundException("폴더를 찾을 수 없습니다.")
         }
 
         folderIds.forEachIndexed { index, folderId ->
-            val folder = getFolder(folderId)
+            val folder = getFolder(user, folderId)
             folder.priority = index + 1
         }
     }
@@ -69,10 +78,9 @@ class FolderService(private val folderRepository: FolderRepository) {
     @Transactional
     fun deleteFolders(user: User, folderIds: List<Long>) {
         folderIds.map {
-            val folder = getFolder(it)
+            val folder = getFolder(user, it)
 
             folder.removeFolder()
-            user.removeFolder(folder)
         }
     }
 

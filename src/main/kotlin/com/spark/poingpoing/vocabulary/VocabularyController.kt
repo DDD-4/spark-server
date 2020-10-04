@@ -14,10 +14,10 @@ class VocabularyController(
 
     @ApiOperation("나의 단어 등록")
     @PostMapping("v1/vocabularies")
-    fun createVocabulary(vocabularyRequest: VocabularyRequest): VocabularyCreateResponse {
+    fun createVocabulary(vocabularyCreateRequest: VocabularyCreateRequest): VocabularyCreateResponse {
         val user = loginUserGetter.getLoginUser()
 
-        return vocabularyService.addVocabulary(user, vocabularyRequest)
+        return vocabularyService.addVocabulary(user, vocabularyCreateRequest)
     }
 
     @ApiOperation("나의 단어 목록 조회")
@@ -33,10 +33,10 @@ class VocabularyController(
     @ApiOperation("나의 단어 수정")
     @PatchMapping("v1/vocabularies/{vocabularyId}")
     fun modifyVocabulary(@PathVariable vocabularyId: Long,
-                         @RequestBody vocabularyRequest: VocabularyRequest) {
+                         @RequestBody vocabularyUpdateRequest: VocabularyUpdateRequest) {
         val user = loginUserGetter.getLoginUser()
 
-        vocabularyService.modifyVocabulary(user, vocabularyId, vocabularyRequest)
+        vocabularyService.modifyVocabulary(user, vocabularyId, vocabularyUpdateRequest)
     }
 
     @ApiOperation("나의 단어 삭제")

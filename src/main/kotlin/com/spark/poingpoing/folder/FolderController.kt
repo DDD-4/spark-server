@@ -13,17 +13,21 @@ class FolderController(private val loginUserGetter: LoginUserGetter,
 
     @ApiOperation("나의 폴더 등록")
     @PostMapping("v1/folders")
-    fun createFolder(@RequestBody folderRequest: FolderRequest): FolderCreateResponse {
+    fun createFolder(@RequestBody folderCreateRequest: FolderCreateRequest): FolderCreateResponse {
         val user = loginUserGetter.getLoginUser()
 
-        return folderService.createFolder(user, folderRequest)
+        return folderService.createFolder(user, folderCreateRequest)
     }
 
     @ApiOperation("나의 폴더 수정")
     @PatchMapping("v1/folders/{folderId}")
     fun modifyVocabulary(@PathVariable folderId: Long,
-                         @RequestBody folderRequest: FolderRequest) =
-            folderService.modifyFolder(folderId, folderRequest)
+                         @RequestBody folderUpdateRequest: FolderUpdateRequest) {
+        val user = loginUserGetter.getLoginUser()
+
+        folderService.modifyFolder(user, folderId, folderUpdateRequest)
+    }
+
 
     @ApiOperation("나의 폴더 순서 변경")
     @PutMapping("v1/folders")
@@ -40,7 +44,6 @@ class FolderController(private val loginUserGetter: LoginUserGetter,
 
         folderService.deleteFolders(user, updateDeleteFolderRequest.folderIds)
     }
-
 
     @ApiOperation("나의 폴더 조회")
     @GetMapping("v1/folders")

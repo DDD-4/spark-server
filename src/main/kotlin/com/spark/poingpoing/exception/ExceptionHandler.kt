@@ -18,13 +18,20 @@ class ExceptionHandler {
     private fun badRequest(request: HttpServletRequest, e: Exception): String? {
         log.info(formatForLog(request, e))
         return e.message
-
     }
 
     @ExceptionHandler(value = [NotFoundException::class])
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     private fun notFound(request: HttpServletRequest, e: Exception): String? {
+        log.info(formatForLog(request, e))
+        return e.message
+    }
+
+    @ExceptionHandler(value = [ForbiddenException::class])
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    private fun forbidden(request: HttpServletRequest, e: Exception): String? {
         log.info(formatForLog(request, e))
         return e.message
     }

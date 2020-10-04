@@ -1,6 +1,6 @@
 package com.spark.poingpoing.vocabulary
 
-import com.spark.poingpoing.exception.BadRequestException
+import com.spark.poingpoing.exception.ForbiddenException
 import com.spark.poingpoing.exception.NotFoundException
 import com.spark.poingpoing.folder.FolderService
 import com.spark.poingpoing.photo.PhotoService
@@ -17,27 +17,26 @@ class VocabularyService(
         private val vocabularyRepository: VocabularyRepository) {
 
     @Transactional
-    fun addVocabulary(user: User, vocabularyRequest: VocabularyRequest) : VocabularyCreateResponse {
-        val photoPath = photoService.uploadPhoto(vocabularyRequest.photo!!)
+    fun addVocabulary(user: User, vocabularyCreateRequest: VocabularyCreateRequest): VocabularyCreateResponse {
+        val photoPath = photoService.uploadPhoto(vocabularyCreateRequest.photo!!)
 
-        val folder = vocabularyRequest.folderId!!.let { folderService.getFolder(it) }
+        val folder = folderService.getFolder(user, vocabularyCreateRequest.folderId)
 
-        val vocabulary = Vocabulary(
-                english = vocabularyRequest.english!!,
-                korean = vocabularyRequest.korean!!,
-                photoPath = photoPath,
-                folder = folder,
-                user = user
-        )
-
-        val savedVocabulary = vocabularyRepository.save(vocabulary)
+        val savedVocabulary = vocabularyRepository.save(
+                Vocabulary(
+                        english = vocabularyCreateRequest.english,
+                        korean = vocabularyCreateRequest.korean,
+                        photoPath = photoPath,
+                        folder = folder,
+                        user = user
+                ))
 
         return VocabularyCreateResponse(savedVocabulary.id)
     }
 
     @Transactional
     fun getMyFolderVocabularies(user: User, folderId: Long, pageRequest: PageRequest): VocabularyPageResponse {
-        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(user.id , folderId, pageRequest)
+        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(user.id, folderId, pageRequest)
 
         val responses = vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
@@ -48,18 +47,16 @@ class VocabularyService(
     }
 
     @Transactional
-    fun modifyVocabulary(user: User, vocabularyId: Long, vocabularyRequest: VocabularyRequest) {
-        val vocabulary = getVocabulary(vocabularyId)
-        if(vocabulary.user.id != user.id) {
-            throw BadRequestException("나의 단어만 수정이 가능합니다.")
-        }
-        vocabularyRequest.folderId?.let {
-            val folder = folderService.getFolder(folderId = it)
+    fun modifyVocabulary(user: User, vocabularyId: Long, vocabularyUpdateRequest: VocabularyUpdateRequest) {
+        val vocabulary = getVocabulary(user, vocabularyId)
+
+        vocabularyUpdateRequest.folderId?.let {
+            val folder = folderService.getFolder(user, it)
             vocabulary.modifyFolder(folder)
         }
-        vocabularyRequest.english?.let { vocabulary.english = it }
-        vocabularyRequest.korean?.let { vocabulary.korean = it }
-        vocabularyRequest.photo?.let {
+        vocabularyUpdateRequest.english?.let { vocabulary.english = it }
+        vocabularyUpdateRequest.korean?.let { vocabulary.korean = it }
+        vocabularyUpdateRequest.photo?.let {
             val newPhotoPath = photoService.uploadPhoto(it)
             vocabulary.photoPath = newPhotoPath
         }
@@ -67,16 +64,22 @@ class VocabularyService(
 
     @Transactional
     fun deleteVocabulary(user: User, vocabularyId: Long) {
-        val vocabulary = getVocabulary(vocabularyId)
-        if(vocabulary.user.id != user.id) {
-            throw BadRequestException("나의 단어만 삭제가 가능합니다.")
-        }
+        val vocabulary = getVocabulary(user, vocabularyId)
 
         vocabulary.delete()
     }
 
+    private fun getVocabulary(user: User, vocabularyId: Long): Vocabulary {
+        val vocabulary = getVocabulary(vocabularyId)
+        if (vocabulary.user != user) {
+            throw ForbiddenException("단어($vocabularyId) 접근이 불가능합니다.")
+        }
+
+        return vocabulary
+    }
+
     private fun getVocabulary(vocabularyId: Long): Vocabulary {
-        return vocabularyRepository.findById(vocabularyId)
-                .orElseThrow { NotFoundException("단어를 찾을 수 없습니다.") }
+        return vocabularyRepository.findByIdAndActiveIsTrue(vocabularyId)
+                .orElseThrow { NotFoundException("단어($vocabularyId)를 찾을 수 없습니다.") }
     }
 }
