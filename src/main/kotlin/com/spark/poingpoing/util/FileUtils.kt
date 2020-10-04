@@ -1,6 +1,6 @@
 package com.spark.poingpoing.util
 
-import javassist.NotFoundException
+import com.spark.poingpoing.exception.NotFoundException
 import org.springframework.core.io.InputStreamResource
 import java.math.BigInteger
 import java.nio.file.Files
@@ -16,7 +16,7 @@ fun findFile(fileName: String): InputStreamResource {
     return try {
         InputStreamResource(Files.newInputStream(path))
     } catch (e: Exception) {
-        throw NotFoundException("$path:: 존재하지 않는 사진 입니다.")
+        throw NotFoundException("사진($path)을 찾을 수 없습니다.")
     }
 }
 

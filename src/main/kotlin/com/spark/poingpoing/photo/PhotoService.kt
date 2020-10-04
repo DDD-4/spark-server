@@ -1,6 +1,7 @@
 package com.spark.poingpoing.photo
 
 
+import com.spark.poingpoing.exception.BadRequestException
 import com.spark.poingpoing.util.findFile
 import com.spark.poingpoing.util.getBaseFilePath
 import org.slf4j.LoggerFactory
@@ -41,7 +42,7 @@ class PhotoService(private val photoRepository: PhotoRepository) {
     @Transactional(readOnly = true)
     fun downloadPhoto(photoId: String): ResponseEntity<Resource> {
         val photo = photoRepository.findFirstByPathKey(UUID.fromString(photoId))
-                .orElseThrow { IllegalArgumentException("잘못된 photo 식별자 입니다.") }
+                .orElseThrow { BadRequestException("잘못된 photo 식별자 입니다.") }
 
         val photoStream = findFile("${photo.pathKey}.${photo.extension}")
 

@@ -1,7 +1,8 @@
 package com.spark.poingpoing.folder
 
+import com.spark.poingpoing.exception.BadRequestException
+import com.spark.poingpoing.exception.NotFoundException
 import com.spark.poingpoing.user.User
-import javassist.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -11,7 +12,7 @@ class FolderService(private val folderRepository: FolderRepository) {
     @Transactional(readOnly = true)
     fun getFolder(folderId: Long): Folder {
         return folderRepository.findByIdAndActiveIsTrue(folderId)
-                .orElseThrow { NotFoundException("해당 폴더를 찾을 수 없습니다.") }
+                .orElseThrow { NotFoundException("폴더($folderId)를 찾을 수 없습니다.") }
     }
 
     @Transactional
@@ -35,7 +36,7 @@ class FolderService(private val folderRepository: FolderRepository) {
     fun modifyFolder(folderId: Long, folderRequest: FolderRequest) {
         val folder = getFolder(folderId)
         if (folder.default) {
-            throw IllegalArgumentException("기본 폴더는 수정할 수 없습니다.")
+            throw BadRequestException("기본 폴더(${folderId})는 수정할 수 없습니다.")
         }
 
         folderRequest.shareable?.let { folder.sharable = it }
@@ -47,16 +48,16 @@ class FolderService(private val folderRepository: FolderRepository) {
         val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndDefaultIsFalse(user.id)
                 .toInt()
         if (countOfActiveFolder != folderIds.size) {
-            throw IllegalArgumentException("변경할 폴더의 갯수가 맞지 않습니다.")
+            throw BadRequestException("변경할 폴더의 갯수가 맞지 않습니다.")
         }
 
         val folders = folderRepository.findAllById(folderIds)
         if (folders.any { it.default }) {
-            throw IllegalArgumentException("기본 폴더는 수정할 수 없습니다.")
+            throw BadRequestException("기본 폴더는 수정할 수 없습니다.")
         }
 
         if (folders.any { !it.active }) {
-            throw IllegalArgumentException("삭제된 폴더의 순서는 바꿀 수 없습니다.")
+            throw BadRequestException("삭제된 폴더의 순서는 바꿀 수 없습니다.")
         }
 
         folderIds.forEachIndexed { index, folderId ->

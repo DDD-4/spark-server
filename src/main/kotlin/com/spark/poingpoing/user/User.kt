@@ -1,6 +1,7 @@
 package com.spark.poingpoing.user
 
 import com.spark.poingpoing.config.BaseEntity
+import com.spark.poingpoing.exception.BadRequestException
 import com.spark.poingpoing.folder.Folder
 import javax.persistence.*
 
@@ -18,7 +19,7 @@ data class User(
 ) : BaseEntity() {
     fun addFolder(folder: Folder) {
         if (folders.contains(folder)) {
-            throw IllegalArgumentException("이미 존재하는 폴더입니다.")
+            throw BadRequestException("이미 존재하는 폴더입니다.")
         }
 
         this.folders.add(folder)

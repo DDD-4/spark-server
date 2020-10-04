@@ -1,5 +1,7 @@
 package com.spark.poingpoing.vocabulary
 
+import com.spark.poingpoing.exception.BadRequestException
+import com.spark.poingpoing.exception.NotFoundException
 import com.spark.poingpoing.folder.FolderService
 import com.spark.poingpoing.photo.PhotoService
 import com.spark.poingpoing.user.User
@@ -49,7 +51,7 @@ class VocabularyService(
     fun modifyVocabulary(user: User, vocabularyId: Long, vocabularyRequest: VocabularyRequest) {
         val vocabulary = getVocabulary(vocabularyId)
         if(vocabulary.user.id != user.id) {
-            throw IllegalArgumentException("나의 단어만 수정이 가능합니다.")
+            throw BadRequestException("나의 단어만 수정이 가능합니다.")
         }
         vocabularyRequest.folderId?.let {
             val folder = folderService.getFolder(folderId = it)
@@ -67,7 +69,7 @@ class VocabularyService(
     fun deleteVocabulary(user: User, vocabularyId: Long) {
         val vocabulary = getVocabulary(vocabularyId)
         if(vocabulary.user.id != user.id) {
-            throw IllegalArgumentException("나의 단어만 삭제가 가능합니다.")
+            throw BadRequestException("나의 단어만 삭제가 가능합니다.")
         }
 
         vocabulary.delete()
@@ -75,6 +77,6 @@ class VocabularyService(
 
     private fun getVocabulary(vocabularyId: Long): Vocabulary {
         return vocabularyRepository.findById(vocabularyId)
-                .orElseThrow { IllegalArgumentException("단어를 찾을 수 없습니다.") }
+                .orElseThrow { NotFoundException("단어를 찾을 수 없습니다.") }
     }
 }

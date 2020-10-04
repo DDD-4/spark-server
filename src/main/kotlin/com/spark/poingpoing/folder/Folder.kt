@@ -1,6 +1,7 @@
 package com.spark.poingpoing.folder
 
 import com.spark.poingpoing.config.BaseEntity
+import com.spark.poingpoing.exception.BadRequestException
 import com.spark.poingpoing.user.User
 import com.spark.poingpoing.util.convertToPhotoUrl
 import com.spark.poingpoing.vocabulary.Vocabulary
@@ -34,7 +35,7 @@ data class Folder(
 
     fun addVocabulary(vocabulary: Vocabulary) {
         if (vocabularies.contains(vocabulary)) {
-            throw IllegalArgumentException("이미 존재하는 단어입니다.")
+            throw BadRequestException("이미 존재하는 단어입니다.")
         }
 
         vocabularies.add(vocabulary)
@@ -46,7 +47,7 @@ data class Folder(
 
     fun removeFolder() {
         if (default) {
-            throw IllegalArgumentException("기본 폴더는 삭제할 수 없습니다.")
+            throw BadRequestException("기본 폴더는 삭제할 수 없습니다.")
         }
 
         if (active) {
@@ -59,7 +60,7 @@ data class Folder(
     }
 
     fun getRepresentativePhotoUrl(): String? {
-        if(vocabularies.isEmpty()) {
+        if (vocabularies.isEmpty()) {
             return ""
         }
 

@@ -1,6 +1,6 @@
 package com.spark.poingpoing.util
 
-import javassist.NotFoundException
+import com.spark.poingpoing.exception.NotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
