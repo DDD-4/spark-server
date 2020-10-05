@@ -1,31 +1,35 @@
 package com.spark.poingpoing.user
 
 import com.spark.poingpoing.config.BaseEntity
-import com.spark.poingpoing.exception.BadRequestException
 import com.spark.poingpoing.folder.Folder
+import org.hibernate.annotations.ColumnDefault
 import javax.persistence.*
+
 
 @Entity
 data class User(
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long,
+        var name: String,
 
-        val name: String,
+        val credential: String,
 
-        @OneToMany(mappedBy = "user")
-        val folders: MutableList<Folder> = mutableListOf()
-
+        @ColumnDefault("")
+        var photoPath: String = ""
 ) : BaseEntity() {
-    fun addFolder(folder: Folder) {
-        if (folders.contains(folder)) {
-            throw BadRequestException("이미 존재하는 폴더입니다.")
-        }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L
 
-        this.folders.add(folder)
+    @ColumnDefault("true")
+    var active: Boolean = true
+
+    @OneToMany(mappedBy = "user")
+    val folders: MutableList<Folder> = mutableListOf()
+
+    fun delete() {
+        active = false
     }
 
-    fun removeFolder(folder: Folder) {
-        folders.remove(folder)
+    fun modifyName(name: String) {
+        this.name = name
     }
 }

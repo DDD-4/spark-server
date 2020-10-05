@@ -1,5 +1,5 @@
-insert into user(name, created_at, updated_at) values ('TEST', now(), now());
-insert into user(name, created_at, updated_at) values ('TEST2', now(), now());
+insert into user(name, credential, created_at, updated_at) values ('TEST', 'test', now(), now());
+insert into user(name, credential, created_at, updated_at) values ('TEST2', 'test2', now(), now());
 
 insert into photo(path_key, name, extension, created_at, updated_at)
 values ('b2f6e721aeef478fb81e942c705071bc', 'apple', 'jpeg', now(), now());
