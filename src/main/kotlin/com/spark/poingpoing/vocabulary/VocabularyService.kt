@@ -18,7 +18,7 @@ class VocabularyService(
 
     @Transactional
     fun addVocabulary(user: User, vocabularyCreateRequest: VocabularyCreateRequest): VocabularyCreateResponse {
-        val photoPath = photoService.uploadPhoto(vocabularyCreateRequest.photo!!)
+        val photoPath = photoService.uploadPhoto(photo = vocabularyCreateRequest.photo!!)
 
         val folder = folderService.getFolder(user, vocabularyCreateRequest.folderId)
 
@@ -60,6 +60,8 @@ class VocabularyService(
             val newPhotoPath = photoService.uploadPhoto(it)
             vocabulary.photoPath = newPhotoPath
         }
+
+        vocabularyRepository.save(vocabulary)
     }
 
     @Transactional

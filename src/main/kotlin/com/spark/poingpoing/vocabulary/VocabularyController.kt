@@ -16,9 +16,8 @@ class VocabularyController(
     @ApiOperation("나의 단어 등록")
     @PostMapping("v1/vocabularies")
     fun createVocabulary(httpServletRequest: HttpServletRequest,
-                         vocabularyCreateRequest: VocabularyCreateRequest): VocabularyCreateResponse {
+                         @RequestBody @ModelAttribute vocabularyCreateRequest: VocabularyCreateRequest): VocabularyCreateResponse {
         val user = loginUserGetter.getLoginUser(httpServletRequest)
-
         return vocabularyService.addVocabulary(user, vocabularyCreateRequest)
     }
 
@@ -37,7 +36,7 @@ class VocabularyController(
     @PatchMapping("v1/vocabularies/{vocabularyId}")
     fun modifyVocabulary(httpServletRequest: HttpServletRequest,
                          @PathVariable vocabularyId: Long,
-                         @RequestBody vocabularyUpdateRequest: VocabularyUpdateRequest) {
+                         @RequestBody @ModelAttribute vocabularyUpdateRequest: VocabularyUpdateRequest) {
         val user = loginUserGetter.getLoginUser(httpServletRequest)
 
         vocabularyService.modifyVocabulary(user, vocabularyId, vocabularyUpdateRequest)

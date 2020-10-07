@@ -45,7 +45,7 @@ class UserController(
     @ApiOperation("프로필 수정")
     @PatchMapping("v1/users")
     fun modifyProfile(httpServletRequest: HttpServletRequest,
-                      @RequestBody userUpdateRequest: UserUpdateRequest) {
+                      @ModelAttribute @RequestBody userUpdateRequest: UserUpdateRequest) {
         val user = loginUserGetter.getLoginUser(httpServletRequest)
 
         userService.modifyUser(user, userUpdateRequest)

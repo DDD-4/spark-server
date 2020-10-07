@@ -24,6 +24,7 @@ class PhotoService(private val photoRepository: PhotoRepository) {
     @Transactional
     fun uploadPhoto(photo: MultipartFile): String {
         val (originalName, extension) = photo.originalFilename!!.split(".")
+
         val createdPhoto = photoRepository.save(Photo(name = originalName, extension = extension))
 
         savePhoto(createdPhoto, photo)

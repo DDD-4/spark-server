@@ -1,5 +1,7 @@
 package com.spark.poingpoing.vocabulary
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.web.multipart.MultipartFile
@@ -15,6 +17,10 @@ data class VocabularyCreateRequest(
         @ApiModelProperty(value = "폴더 Id", example = "3", required = true)
         val folderId: Long,
 
+        @JsonIgnore
         @ApiModelProperty(value = "사진", required = true)
-        var photo: MultipartFile?
+        var photo: MultipartFile?,
+
+        @JsonProperty("photo")
+        var file: String?
 )
