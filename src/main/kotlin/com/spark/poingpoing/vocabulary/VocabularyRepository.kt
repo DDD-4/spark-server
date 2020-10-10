@@ -9,6 +9,7 @@ import java.util.*
 @Repository
 interface VocabularyRepository : JpaRepository<Vocabulary, Long> {
     fun findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(userId: Long, folderId: Long, pageable: Pageable): Page<Vocabulary>
+    fun findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(userId: Long, folderId: Long): List<Vocabulary>
     fun findByUserIdNotAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(userId: Long, folderId: Long, pageable: Pageable): Page<Vocabulary>
     fun findAllByFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(folderId: Long): List<Vocabulary>
     fun findByIdAndActiveIsTrue(vocabularyId: Long): Optional<Vocabulary>

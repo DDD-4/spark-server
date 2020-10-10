@@ -32,6 +32,15 @@ class VocabularyController(
         return vocabularyService.getMyFolderVocabularies(user, folderId, PageRequest.of(page, size))
     }
 
+    @ApiOperation("게임용 단어 목록 조회")
+    @GetMapping("v1/vocabularies/game")
+    fun getMyFolderVocabularies(httpServletRequest: HttpServletRequest,
+                                @RequestParam(required = true) folderId: Long): List<VocabularyResponse> {
+        val user = loginUserGetter.getLoginUser(httpServletRequest)
+
+        return vocabularyService.getMyFolderVocabularies(user, folderId)
+    }
+
     @ApiOperation("나의 단어 수정")
     @PatchMapping("v1/vocabularies/{vocabularyId}")
     fun modifyVocabulary(httpServletRequest: HttpServletRequest,

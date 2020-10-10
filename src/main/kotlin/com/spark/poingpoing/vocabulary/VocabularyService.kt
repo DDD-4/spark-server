@@ -36,7 +36,8 @@ class VocabularyService(
 
     @Transactional
     fun getMyFolderVocabularies(user: User, folderId: Long, pageRequest: PageRequest): VocabularyPageResponse {
-        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(user.id, folderId, pageRequest)
+        val folder = folderService.getFolder(user, folderId)
+        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(user.id, folder.id, pageRequest)
 
         val responses = vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
@@ -44,6 +45,17 @@ class VocabularyService(
                 .toList()
 
         return VocabularyPageResponse(responses, vocabularies.hasNext(), vocabularies.totalElements)
+    }
+
+    @Transactional
+    fun getMyFolderVocabularies(user: User, folderId: Long): List<VocabularyResponse> {
+        val folder = folderService.getFolder(user, folderId)
+        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(user.id, folder.id)
+
+
+        return vocabularies.map {
+            VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
+        }.toList()
     }
 
     @Transactional
