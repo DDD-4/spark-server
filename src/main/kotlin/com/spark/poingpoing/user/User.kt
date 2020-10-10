@@ -12,6 +12,8 @@ data class User(
 
         val credential: String,
 
+        val email: String,
+
         @ColumnDefault("")
         var photoPath: String = ""
 ) : BaseEntity() {

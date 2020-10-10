@@ -10,4 +10,6 @@ interface UserRepository : JpaRepository<User, Long> {
 
     @EntityGraph(attributePaths = ["folders"], type = EntityGraph.EntityGraphType.LOAD)
     override fun findById(userId: Long): Optional<User>
+
+    fun findFirstByEmail(email: String): Optional<User>
 }

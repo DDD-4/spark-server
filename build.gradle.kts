@@ -31,6 +31,7 @@ allOpen {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -39,6 +40,7 @@ dependencies {
     implementation("commons-io:commons-io:2.6")
     implementation("com.querydsl:querydsl-jpa")
     implementation("com.querydsl:querydsl-apt")
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     implementation("com.querydsl:querydsl-jpa:4.3.1")
     kapt("com.querydsl:querydsl-apt:4.3.1:jpa")

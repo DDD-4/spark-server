@@ -1,11 +1,13 @@
 package com.spark.poingpoing.user
 
-import com.spark.poingpoing.user.auth.AuthService
+import com.spark.poingpoing.user.auth.JwtAuthToken
+import com.spark.poingpoing.user.auth.JwtTokenProvider
 import com.spark.poingpoing.util.convertToPhotoUrl
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 
 @Api(tags = ["User"])
@@ -13,25 +15,20 @@ import javax.servlet.http.HttpServletRequest
 class UserController(
         private val loginUserGetter: LoginUserGetter,
         private val userService: UserService,
-        private val authService: AuthService) {
+        private val jwtTokenProvider: JwtTokenProvider) {
 
     @ApiOperation("회원 가입")
-    @PostMapping("v1/users")
-    fun createUser(userCreateRequest: UserCreateRequest) {
-        userService.createUser(userCreateRequest)
+    @PostMapping("v1/users/sign-up")
+    fun createUser(userCreateRequest: UserCreateRequest): UserResponse {
+        return userService.createUser(userCreateRequest)
     }
 
     @ApiOperation("로그인")
-    @GetMapping("v1/users/login")
-    fun login(@RequestBody loginRequest: LoginRequest) {
-        val token = authService.createToken(loginRequest)
-        //todo
-    }
+    @PostMapping("v1/users/login")
+    fun login(@RequestBody loginRequest: LoginRequest, httpServletResponse: HttpServletResponse): JwtAuthToken {
+        val user = userService.findUser(loginRequest)
 
-    @ApiOperation("로그아웃")
-    @GetMapping("v1/users/logout")
-    fun logout() {
-        //todo
+        return jwtTokenProvider.createToken(user)
     }
 
     @ApiOperation("내정보 조회")
@@ -39,7 +36,7 @@ class UserController(
     fun findUser(httpServletRequest: HttpServletRequest): UserResponse {
         val user = loginUserGetter.getLoginUser(httpServletRequest)
 
-        return UserResponse(user.id, user.name, user.photoPath.convertToPhotoUrl())
+        return UserResponse(user.id, user.name, user.email, user.photoPath.convertToPhotoUrl())
     }
 
     @ApiOperation("프로필 수정")
