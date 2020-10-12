@@ -9,7 +9,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 @Component
 class JwtTokenProvider(
@@ -54,11 +53,11 @@ class JwtTokenProvider(
         return claims.subject
     }
 
-    fun createToken(user: User): JwtAuthToken {
+    fun createToken(user: User): String {
         val now = LocalDateTime.now()
         val expiredAt = now.plus(EXPIRATION_MS, ChronoUnit.MILLIS)
 
-        val token = Jwts.builder()
+        return Jwts.builder()
                 .setHeader(createHeader(now))
                 .setClaims(createClaims(user))
                 .setSubject(user.email)
@@ -68,8 +67,6 @@ class JwtTokenProvider(
                         .toInstant()))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact()
-
-        return JwtAuthToken(token)
     }
 
     private fun createClaims(user: User): Map<String, Any> {

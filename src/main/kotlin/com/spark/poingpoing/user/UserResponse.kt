@@ -12,7 +12,7 @@ data class UserResponse(
         @ApiModelProperty(value = "이름", example = "홍길동")
         val name: String,
 
-        @ApiModelProperty(value = "메", example = "apple@gmail.com")
+        @ApiModelProperty(value = "메일", example = "apple@gmail.com")
         val email: String,
 
         @ApiModelProperty(value = "이미지 Url", example = "")

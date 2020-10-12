@@ -1,6 +1,6 @@
 package com.spark.poingpoing.user
 
-import com.spark.poingpoing.user.auth.JwtAuthToken
+import com.spark.poingpoing.user.auth.LoginResponse
 import com.spark.poingpoing.user.auth.JwtTokenProvider
 import com.spark.poingpoing.util.convertToPhotoUrl
 import io.swagger.annotations.Api
@@ -25,10 +25,14 @@ class UserController(
 
     @ApiOperation("로그인")
     @PostMapping("v1/users/login")
-    fun login(@RequestBody loginRequest: LoginRequest, httpServletResponse: HttpServletResponse): JwtAuthToken {
+    fun login(@RequestBody loginRequest: LoginRequest, httpServletResponse: HttpServletResponse): LoginResponse {
         val user = userService.findUser(loginRequest)
+        val token = jwtTokenProvider.createToken(user)
 
-        return jwtTokenProvider.createToken(user)
+        return  LoginResponse(
+                token,
+                UserResponse(user.id, user.name, user.email, user.photoPath.convertToPhotoUrl())
+        )
     }
 
     @ApiOperation("내정보 조회")

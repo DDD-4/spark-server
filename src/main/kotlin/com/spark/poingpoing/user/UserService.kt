@@ -4,7 +4,6 @@ import com.spark.poingpoing.exception.BadRequestException
 import com.spark.poingpoing.exception.ForbiddenException
 import com.spark.poingpoing.exception.NotFoundException
 import com.spark.poingpoing.photo.PhotoService
-import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
