@@ -16,7 +16,7 @@ class UserService(
 
     @Transactional
     fun createUser(userCreateRequest: UserCreateRequest): UserResponse {
-        val history = userRepository.findFirstByEmail(userCreateRequest.email)
+        val history = userRepository.findFirstByEmailAndActiveIsTrue(userCreateRequest.email)
         if(history.isPresent) {
             throw BadRequestException("이미 존재하는 email(${userCreateRequest.email}) 입니다")
         }
@@ -50,7 +50,7 @@ class UserService(
 
     @Transactional(readOnly = true)
     fun findUser(loginRequest: LoginRequest): User {
-        val user = userRepository.findFirstByEmail(loginRequest.email)
+        val user = userRepository.findFirstByEmailAndActiveIsTrue(loginRequest.email)
                 .orElseThrow {
                     NotFoundException("일치하는 사용자(${loginRequest.email})가 없습니다.")
                 }
