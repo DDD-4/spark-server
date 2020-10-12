@@ -30,9 +30,9 @@ class JwtRequestFilter(private val jwtTokenProvider: JwtTokenProvider,
             throw ForbiddenException("JWT Token Error")
         }
         if (SecurityContextHolder.getContext().authentication == null && jwtTokenProvider.validateToken(token)) {
-            val user = userRepository.findFirstByEmailAndActiveIsTrue(jwtTokenProvider.getTokenUserEmail(token))
+            val user = userRepository.findFirstByCredentialAndActiveIsTrue(jwtTokenProvider.getTokenCredential(token))
                     .orElseThrow { ForbiddenException("사용자를 찾을 수 없습니다") }
-            val userDetails: UserDetails = User(user.email, user.credential, mutableListOf())
+            val userDetails: UserDetails = User(user.id.toString(), user.credential, mutableListOf())
             val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.authorities)
             usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)

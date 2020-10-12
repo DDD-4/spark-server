@@ -44,7 +44,7 @@ class JwtTokenProvider(
         return true
     }
 
-    fun getTokenUserEmail(token: String): String {
+    fun getTokenCredential(token: String): String {
         val claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
@@ -60,7 +60,7 @@ class JwtTokenProvider(
         return Jwts.builder()
                 .setHeader(createHeader(now))
                 .setClaims(createClaims(user))
-                .setSubject(user.email)
+                .setSubject(user.credential)
                 .setIssuedAt(Date.from(now.atZone(ZoneId.systemDefault())
                         .toInstant()))
                 .setExpiration(Date.from(expiredAt.atZone(ZoneId.systemDefault())
@@ -72,12 +72,13 @@ class JwtTokenProvider(
     private fun createClaims(user: User): Map<String, Any> {
         val claims = mutableMapOf<String, Any>()
         claims["name"] = user.name
+        claims["id"] = user.id
         return claims
     }
 
     private fun createHeader(now: LocalDateTime): Map<String, Any> {
         val header = mutableMapOf<String, Any>()
-        header["type"] = "JWT"
+        header["typ"] = "JWT"
         header["alg"] = "HS512"
         header["regDate"] = now
         return header

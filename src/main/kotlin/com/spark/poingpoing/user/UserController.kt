@@ -19,7 +19,7 @@ class UserController(
 
     @ApiOperation("회원 가입")
     @PostMapping("v1/users/sign-up")
-    fun createUser(userCreateRequest: UserCreateRequest): UserResponse {
+    fun createUser(@RequestBody userCreateRequest: UserCreateRequest): UserResponse {
         return userService.createUser(userCreateRequest)
     }
 
@@ -31,7 +31,7 @@ class UserController(
 
         return  LoginResponse(
                 token,
-                UserResponse(user.id, user.name, user.email, user.photoPath.convertToPhotoUrl())
+                UserResponse(user.id, user.name, user.photoPath.convertToPhotoUrl())
         )
     }
 
@@ -40,7 +40,7 @@ class UserController(
     fun findUser(httpServletRequest: HttpServletRequest): UserResponse {
         val user = loginUserGetter.getLoginUser(httpServletRequest)
 
-        return UserResponse(user.id, user.name, user.email, user.photoPath.convertToPhotoUrl())
+        return UserResponse(user.id, user.name, user.photoPath.convertToPhotoUrl())
     }
 
     @ApiOperation("프로필 수정")

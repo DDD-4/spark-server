@@ -16,15 +16,14 @@ class UserService(
 
     @Transactional
     fun createUser(userCreateRequest: UserCreateRequest): UserResponse {
-        val history = userRepository.findFirstByEmailAndActiveIsTrue(userCreateRequest.email)
+        val history = userRepository.findFirstByCredentialAndActiveIsTrue(userCreateRequest.credential)
         if(history.isPresent) {
-            throw BadRequestException("이미 존재하는 email(${userCreateRequest.email}) 입니다")
+            throw BadRequestException("이미 존재하는 사용자 입니다.")
         }
 
         val user = User(
                 name = userCreateRequest.name,
-                email = userCreateRequest.email,
-                credential = passwordEncoder.encode(userCreateRequest.credential)
+                credential = userCreateRequest.credential
         )
 
         return UserResponse.of(userRepository.save(user))
@@ -50,17 +49,17 @@ class UserService(
 
     @Transactional(readOnly = true)
     fun findUser(loginRequest: LoginRequest): User {
-        val user = userRepository.findFirstByEmailAndActiveIsTrue(loginRequest.email)
+        val user = userRepository.findFirstByCredentialAndActiveIsTrue(loginRequest.credential)
                 .orElseThrow {
-                    NotFoundException("일치하는 사용자(${loginRequest.email})가 없습니다.")
+                    NotFoundException("일치하는 사용자가 없습니다.")
                 }
 
         println(passwordEncoder.encode(loginRequest.credential))
 
-        if (passwordEncoder.matches(loginRequest.credential, user.credential)) {
+        if (loginRequest.credential == user.credential) {
             return user
         }
 
-        throw ForbiddenException("인증키(${loginRequest.credential}가 틀렸습니다")
+        throw ForbiddenException("인증키가 틀렸습니다")
     }
 }
