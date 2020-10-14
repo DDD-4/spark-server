@@ -28,7 +28,7 @@ class FolderService(private val folderRepository: FolderRepository) {
 
     @Transactional
     fun createFolder(user: User, folderRequest: FolderCreateRequest): FolderCreateResponse {
-        val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndDefaultIsFalse(user.id)
+        val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndBasicIsFalse(user.id)
                 .toInt()
 
         val folder = Folder(name = folderRequest.name,
@@ -47,7 +47,7 @@ class FolderService(private val folderRepository: FolderRepository) {
                 sharable = false,
                 user = user,
                 priority = 0,
-                default = true)
+                basic = true)
 
         folderRepository.save(folder)
     }
@@ -56,7 +56,7 @@ class FolderService(private val folderRepository: FolderRepository) {
     @Transactional
     fun modifyFolder(user: User, folderId: Long, folderUpdateRequest: FolderUpdateRequest) {
         val folder = getFolder(user, folderId)
-        if (folder.default) {
+        if (folder.basic) {
             throw BadRequestException("기본 폴더(${folderId})는 수정할 수 없습니다.")
         }
 
@@ -66,14 +66,14 @@ class FolderService(private val folderRepository: FolderRepository) {
 
     @Transactional
     fun modifyFoldersOrder(user: User, folderIds: List<Long>) {
-        val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndDefaultIsFalse(user.id)
+        val countOfActiveFolder = folderRepository.countByUserIdAndActiveIsTrueAndBasicIsFalse(user.id)
                 .toInt()
         if (countOfActiveFolder != folderIds.size) {
             throw BadRequestException("변경할 폴더의 갯수가 맞지 않습니다.")
         }
 
         val folders = folderRepository.findAllById(folderIds)
-        if (folders.any { it.default }) {
+        if (folders.any { it.basic }) {
             throw BadRequestException("기본 폴더는 수정할 수 없습니다.")
         }
 
@@ -102,7 +102,7 @@ class FolderService(private val folderRepository: FolderRepository) {
 
         return folders
                 .sortedBy {
-                    it.default
+                    it.basic
                     it.priority
                 }
                 .map {
@@ -110,7 +110,7 @@ class FolderService(private val folderRepository: FolderRepository) {
                             id = it.id,
                             name = it.name,
                             shareable = it.sharable,
-                            default = it.default,
+                            default = it.basic,
                             photoUrl = it.getRepresentativePhotoUrl()
                     )
                 }

@@ -22,7 +22,7 @@ data class Folder(
         @ColumnDefault("0.0")
         var point: Double = 0.0,
 
-        val default: Boolean = false,
+        val basic: Boolean = false,
 
         @OneToMany(mappedBy = "folder")
         val vocabularies: MutableList<Vocabulary> = mutableListOf()
@@ -46,7 +46,7 @@ data class Folder(
     }
 
     fun removeFolder() {
-        if (default) {
+        if (basic) {
             throw BadRequestException("기본 폴더는 삭제할 수 없습니다.")
         }
 
