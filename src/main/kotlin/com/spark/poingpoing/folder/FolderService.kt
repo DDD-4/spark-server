@@ -13,7 +13,7 @@ class FolderService(private val folderRepository: FolderRepository) {
     @Transactional(readOnly = true)
     fun getFolder(user: User, folderId: Long): Folder {
         val folder = getFolder(folderId)
-        if(folder.user != user) {
+        if (folder.user != user) {
             throw ForbiddenException("폴더($folderId) 접근이 불가능합니다.")
         }
 
@@ -40,6 +40,18 @@ class FolderService(private val folderRepository: FolderRepository) {
 
         return FolderCreateResponse(savedFolder.id)
     }
+
+    @Transactional
+    fun createDefaultFolder(user: User) {
+        val folder = Folder(name = "기본폴더",
+                sharable = false,
+                user = user,
+                priority = 0,
+                default = true)
+
+        folderRepository.save(folder)
+    }
+
 
     @Transactional
     fun modifyFolder(user: User, folderId: Long, folderUpdateRequest: FolderUpdateRequest) {

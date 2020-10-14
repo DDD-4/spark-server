@@ -3,6 +3,7 @@ package com.spark.poingpoing.user
 import com.spark.poingpoing.exception.BadRequestException
 import com.spark.poingpoing.exception.ForbiddenException
 import com.spark.poingpoing.exception.NotFoundException
+import com.spark.poingpoing.folder.FolderService
 import com.spark.poingpoing.photo.PhotoService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 class UserService(
         private val userRepository: UserRepository,
         private val photoService: PhotoService,
+        private val folderService: FolderService,
         private val passwordEncoder: PasswordEncoder) {
 
     @Transactional
@@ -25,6 +27,8 @@ class UserService(
                 name = userCreateRequest.name,
                 credential = userCreateRequest.credential
         )
+
+        folderService.createDefaultFolder(user)
 
         return UserResponse.of(userRepository.save(user))
     }
