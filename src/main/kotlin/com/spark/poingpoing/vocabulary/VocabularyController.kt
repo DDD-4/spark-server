@@ -35,10 +35,10 @@ class VocabularyController(
     @ApiOperation("게임용 단어 목록 조회")
     @GetMapping("v1/vocabularies/game")
     fun getMyFolderVocabularies(httpServletRequest: HttpServletRequest,
-                                @RequestParam(required = true) folderId: Long): List<VocabularyResponse> {
+                                @RequestParam(required = true) folderIds: List<Long>): List<VocabularyResponse> {
         val user = loginUserGetter.getLoginUser(httpServletRequest)
 
-        return vocabularyService.getMyFolderVocabularies(user, folderId)
+        return vocabularyService.getMyFolderVocabularies(user, folderIds)
     }
 
     @ApiOperation("나의 단어 수정")

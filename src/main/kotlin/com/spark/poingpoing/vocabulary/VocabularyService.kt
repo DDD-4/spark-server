@@ -48,10 +48,12 @@ class VocabularyService(
     }
 
     @Transactional
-    fun getMyFolderVocabularies(user: User, folderId: Long): List<VocabularyResponse> {
-        val folder = folderService.getFolder(user, folderId)
-        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdAndActiveIsTrueOrderByUpdatedAtDesc(user.id, folder.id)
+    fun getMyFolderVocabularies(user: User, folderIds: List<Long>): List<VocabularyResponse> {
+        folderIds.forEach {
+            folderService.getFolder(user, it)
+        }
 
+        val vocabularies = vocabularyRepository.findByUserIdAndFolderIdInAndActiveIsTrueOrderByUpdatedAtDesc(user.id, folderIds)
 
         return vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())

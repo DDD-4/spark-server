@@ -60,13 +60,14 @@ data class Folder(
     }
 
     fun getRepresentativePhotoUrl(): String? {
-        if (vocabularies.isEmpty()) {
+        val activeVocabularies = this.vocabularies.filter { vocabulary -> vocabulary.active }
+
+        if (activeVocabularies.isEmpty()) {
             return ""
         }
 
-        return vocabularies
+        return activeVocabularies
                 .asSequence()
-                .filter { vocabulary -> vocabulary.active }
                 .sortedByDescending { it.updatedAt }
                 .first()
                 .photoPath
