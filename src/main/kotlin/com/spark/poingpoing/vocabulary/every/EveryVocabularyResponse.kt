@@ -16,7 +16,7 @@ data class EveryVocabularyResponse(
         val userName: String,
 
         @ApiModelProperty(value = "대표 사진", example = "apple")
-        val photoUrl: String,
+        var photoUrl: String,
 
         @ApiModelProperty(value = "이미지 갯수", example = "20")
         val count: Long

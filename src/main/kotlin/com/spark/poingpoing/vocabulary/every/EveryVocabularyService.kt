@@ -21,14 +21,20 @@ class EveryVocabularyService(
     fun getEveryVocabularyFoldersOrderByLatest(user: User, pageRequest: PageRequest): EveryVocabularyPageResponse {
 
         val everyVocabularies = everyVocabularyDao.findEveryVocabulariesOrderByLatest(user.id, pageRequest)
-
+        everyVocabularies.content
+                .forEach {
+                    it.photoUrl = it.photoUrl.convertToPhotoUrl()
+                }
         return EveryVocabularyPageResponse(everyVocabularies.content, everyVocabularies.hasNext(), everyVocabularies.totalElements)
     }
 
     @Transactional(readOnly = true)
     fun getEveryVocabularyFoldersOrderByPopular(user: User, pageRequest: PageRequest): EveryVocabularyPageResponse {
         val everyVocabularies = everyVocabularyDao.findEveryVocabulariesOrderByPopular(user.id, pageRequest)
-
+        everyVocabularies.content
+                .forEach {
+                    it.photoUrl = it.photoUrl.convertToPhotoUrl()
+                }
         return EveryVocabularyPageResponse(everyVocabularies.content, everyVocabularies.hasNext(), everyVocabularies.totalElements)
     }
 

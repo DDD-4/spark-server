@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.spark.poingpoing.folder.QFolder.folder
 import com.spark.poingpoing.user.QUser.user
+import com.spark.poingpoing.util.convertToPhotoUrl
 import com.spark.poingpoing.vocabulary.QVocabulary.vocabulary
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
