@@ -34,10 +34,6 @@ data class Folder(
     var active: Boolean = true
 
     fun addVocabulary(vocabulary: Vocabulary) {
-        if (vocabularies.contains(vocabulary)) {
-            throw BadRequestException("이미 존재하는 단어입니다.")
-        }
-
         vocabularies.add(vocabulary)
     }
 
