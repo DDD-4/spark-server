@@ -33,10 +33,6 @@ data class Folder(
 
     var active: Boolean = true
 
-    fun addVocabulary(vocabulary: Vocabulary) {
-        vocabularies.add(vocabulary)
-    }
-
     fun removeVocabulary(vocabulary: Vocabulary) {
         vocabularies.minus(vocabulary)
     }

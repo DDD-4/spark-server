@@ -33,11 +33,4 @@ data class Vocabulary(
             active = false
         }
     }
-
-    fun modifyFolder(folder: Folder) {
-        this.folder?.removeVocabulary(this)
-
-        this.folder = folder
-        folder.addVocabulary(this)
-    }
 }

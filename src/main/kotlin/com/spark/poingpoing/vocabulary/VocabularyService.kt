@@ -57,7 +57,8 @@ class VocabularyService(
 
         return vocabularies.map {
             VocabularyResponse(it.id, it.english, it.korean, it.photoPath.convertToPhotoUrl())
-        }.toList()
+        }
+                .toList()
     }
 
     @Transactional
@@ -66,7 +67,7 @@ class VocabularyService(
 
         vocabularyUpdateRequest.folderId?.let {
             val folder = folderService.getFolder(user, it)
-            vocabulary.modifyFolder(folder)
+            vocabulary.folder = folder
         }
         vocabularyUpdateRequest.english?.let { vocabulary.english = it }
         vocabularyUpdateRequest.korean?.let { vocabulary.korean = it }
