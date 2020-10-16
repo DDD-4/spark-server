@@ -21,6 +21,7 @@ class EveryVocabularyDao(private val jpaQueryFactory: JPAQueryFactory) {
                         folder.id,
                         folder.name,
                         user.name,
+                        user.photoPath,
                         vocabulary.photoPath.max(),
                         vocabulary.id.count())
                 )
@@ -49,6 +50,7 @@ class EveryVocabularyDao(private val jpaQueryFactory: JPAQueryFactory) {
                         folder.id,
                         folder.name,
                         user.name,
+                        user.photoPath,
                         vocabulary.photoPath.max(),
                         vocabulary.id.count())
                 )

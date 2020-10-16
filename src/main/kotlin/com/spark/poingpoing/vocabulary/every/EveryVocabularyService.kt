@@ -24,6 +24,8 @@ class EveryVocabularyService(
         everyVocabularies.content
                 .forEach {
                     it.photoUrl = it.photoUrl.convertToPhotoUrl()
+                    it.userPhotoUrl = it.userPhotoUrl.convertToPhotoUrl()
+
                 }
         return EveryVocabularyPageResponse(everyVocabularies.content, everyVocabularies.hasNext(), everyVocabularies.totalElements)
     }
@@ -34,6 +36,7 @@ class EveryVocabularyService(
         everyVocabularies.content
                 .forEach {
                     it.photoUrl = it.photoUrl.convertToPhotoUrl()
+                    it.userPhotoUrl = it.userPhotoUrl.convertToPhotoUrl()
                 }
         return EveryVocabularyPageResponse(everyVocabularies.content, everyVocabularies.hasNext(), everyVocabularies.totalElements)
     }

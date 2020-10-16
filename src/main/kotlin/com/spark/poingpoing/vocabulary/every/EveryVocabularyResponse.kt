@@ -15,6 +15,9 @@ data class EveryVocabularyResponse(
         @ApiModelProperty(value = "폴더 주인", example = "홍길동")
         val userName: String,
 
+        @ApiModelProperty(value = "폴더 주인 사진")
+        var userPhotoUrl: String,
+
         @ApiModelProperty(value = "대표 사진", example = "apple")
         var photoUrl: String,
 
